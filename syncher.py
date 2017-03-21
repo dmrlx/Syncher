@@ -1,15 +1,15 @@
-class ArgsReceiver(object):
+class ArgsReceiver(object): # Получает аргументы от CLI
     return result
 
 
-class ParserResults(object):
+class ParserResults(object): # Класс глобальных переменных
     cli = ""
     password = ""
     files = []
     host = ""
 
 
-class Parser(object):
+class Parser(object): # Класс парсера с подклассами
     class ParserPassword(object):
         def parser(self, some_list):
             return result
@@ -19,7 +19,7 @@ class Parser(object):
             return result
 
 
-class ValidateParams(object):
+class ValidateParams(object): # Класс валидатора
     def validator(self, ParsResult):
         return result
 
