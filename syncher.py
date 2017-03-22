@@ -16,8 +16,9 @@ class ParserResults(object): # Класс глобальных переменн�
 
 
 class Parser(object): # Класс парсера с подклассами
-    @staticmethod
+
     class ParserPassword(object):
+        @staticmethod
         def parser(self, some_list):
             pass
 
@@ -40,6 +41,7 @@ class Interface(object): # Класс и метод для доступа к с�
     @property
     def interface(params):
         pass
+
 
 if "__name__" == "__main__":
     # Добавить проверку ОС
