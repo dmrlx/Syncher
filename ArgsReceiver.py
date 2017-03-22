@@ -6,7 +6,7 @@ import sys
 
 class ArgsReceiver(object):  # Получает аргументы от CLI
 
-    @staticmethod
+    @staticmethod    
     def receiver():
         return sys.argv[1:]
 
