@@ -1,7 +1,12 @@
 class Parser(object):
 
-    class Rsync_options():
+    class Directory():
+        @staticmethod
+        def do(some_list):
+            pattern = ''
+            return ''
 
+    class Rsync_options():
         @staticmethod
         def do(some_list):
             pattern = r'-\w+|--.+'
@@ -12,24 +17,7 @@ class Parser(object):
                     options.append(option)
                     return ' '.join(options)
 
-    class Directory():
-
-        @staticmethod
-        def do(some_list):
-            pattern = ''
-
-    class Password():
-
-        @staticmethod
-        def do(some_list):
-            pattern = r'dont_know_about_password_thing'
-            for element in some_list:
-                password = re.match(pattern, element)
-                if password:
-                    return password
-
     class Files_without_star():
-
         @staticmethod
         def do(some_list):
             pattern = r'.+\..+'
@@ -39,6 +27,16 @@ class Parser(object):
                 if file:
                     files.append(file.group(0))
             return ' '.join(files)
+
+    class Password():
+        @staticmethod
+        def do(some_list):
+            pattern = r'dont_know_about_password_thing'
+            for element in some_list:
+                password = re.match(pattern, element)
+                if password:
+                    return password
+
 
 import re
 
