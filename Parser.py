@@ -1,3 +1,30 @@
+import re
+import sys
+
+
+class ArgsReceiver:
+
+    @staticmethod
+    def receiver():
+        options_list = ['-a', '-av', '--password-file=/root/pswds/take.here']
+        dirs_list = ['/usr', '/usr/', 'host:/usr']
+        files_list = ['45.123', 'qwer.ty', 'rte.']
+        users_list = ['user:22@host:/usr']
+        some_list = options_list + dirs_list + files_list + users_list
+        return some_list
+
+
+class ParserResults(object):
+    cli = ""
+    password = ""
+    files = ""
+    user = ""
+    port = ""
+    host = ""
+    dist = ""
+    full_host = ""
+
+
 class Parser(object):
 
     @staticmethod
@@ -7,24 +34,23 @@ class Parser(object):
             match = re.match(pattern, element)
             if match:
                 match_list.append(element)
-        return match_list
+        return " ".join(match_list)
 
-# Я так понял, в этих опциях будут и пароли тоже - в виде --password-file=...
-    class Rsync_options():
+    class Rsync_options:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             pattern = r'^(-\w+|--[\w\-\=]+/[\w\d\/\.]+)'
             return Parser.check_for_match(pattern, some_list)
 
-    class Local_directory():
+    class Local_directory:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             pattern = r'^/.+'
             return Parser.check_for_match(pattern, some_list)
 
-    class Files_without_star():
+    class Files:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             pattern = r'^[^-].+\..+'
             return Parser.check_for_match(pattern, some_list)
 
@@ -36,54 +62,55 @@ class Parser(object):
             if remote:
                 return element.split('@')
 
-
-    class Remote_user():
+    class Remote_user:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
             user_plus_port = remote_stuff[0].split(':')
             return user_plus_port[0]
 
-    class Remote_port():
+    class Remote_port:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
             user_plus_port = remote_stuff[0].split(':')
             if len(user_plus_port) > 1:
                 return user_plus_port[1]
-            else: return ''
+            else:
+                return ''
 
-    class Remote_host():
+    class Remote_host:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
-            host_plus_dir = remote_stuff[1].split(':')
+            host_plus_dir = remote_stuff[1].split(':,.')
             return host_plus_dir[0]
 
-    class Remote_directory():
+    class Remote_directory:
         @staticmethod
-        def do(some_list):
+        def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
             host_plus_dir = remote_stuff[1].split(':')
             if len(host_plus_dir) > 1:
                 return host_plus_dir[1]
-            else: return ''
+            else:
+                return ''
 
-"""
-import re
-import sys
+    ParserResults.cli = Rsync_options.parser(ArgsReceiver.receiver)
+    ParserResults.password = 'something'
+    ParserResults.files = Files.parser(ArgsReceiver.receiver)
+    ParserResults.name = Remote_user.parser(ArgsReceiver.receiver)
+    ParserResults.port = Remote_port.parcer(ArgsReceiver.receiver)
+    ParserResults.host = Remote_host.parser(ArgsReceiver.receiver)
+    ParserResults.dist = Remote_directory.parser(ArgsReceiver.receiver)
+    ParserResults.full_host = remote_stuff(ArgsReceiver.receiver)
+
 
 print(sys.version)
-options_list = ['-a', '-av', '--password-file=/root/pswds/take.here']
-dirs_list = ['/usr', '/usr/', 'host:/usr']
-files_list = ['45.123', 'qwer.ty', 'rte.']
-users_list = ['user:22@host:/usr']
-some_list = options_list + dirs_list + files_list + users_list
-print(Parser.Rsync_options.do(some_list))
-print(Parser.Local_directory.do(some_list))
-print(Parser.Files_without_star.do(some_list))
-print(Parser.Remote_user.do(some_list))
-print(Parser.Remote_port.do(some_list))
-print(Parser.Remote_host.do(some_list))
-print(Parser.Remote_directory.do(some_list))
-"""
+print(ParserResults.cli)
+print(ParserResults.files)
+print(ParserResults.user)
+print(ParserResults.port)
+print(ParserResults.host)
+print(ParserResults.dist)
+print(ParserResults.full_host)
