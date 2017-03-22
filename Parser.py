@@ -1,11 +1,7 @@
 class Parser(object):
 
-    class Directory():
-        @staticmethod
-        def do(some_list):
-            pattern = ''
-            return ''
 
+# Я так понял, в этих опциях будут и пароли тоже - в виде --password-file=...
     class Rsync_options():
         @staticmethod
         def do(some_list):
@@ -17,6 +13,17 @@ class Parser(object):
                     options.append(option)
                     return ' '.join(options)
 
+    class Directory():
+        @staticmethod
+        def do(some_list):
+            pattern = r'/.+'
+            directories = []
+            for element in some_list:
+                directory = re.match(pattern, element)
+                if file:
+                    directories.append(directory.group(0))
+            return ' '.join(directories)
+
     class Files_without_star():
         @staticmethod
         def do(some_list):
@@ -27,15 +34,6 @@ class Parser(object):
                 if file:
                     files.append(file.group(0))
             return ' '.join(files)
-
-    class Password():
-        @staticmethod
-        def do(some_list):
-            pattern = r'dont_know_about_password_thing'
-            for element in some_list:
-                password = re.match(pattern, element)
-                if password:
-                    return password
 
 
 import re
