@@ -23,3 +23,9 @@ class ValidateParams(object): # Класс валидатора
     def validator(self, ParsResult):
         return result
 
+
+class Interface(object): # Класс и метод для доступа к скрипту снаружи
+
+    @property
+    def interface(params):
+
