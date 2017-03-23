@@ -157,7 +157,6 @@ if __name__ == "__main__":
     print("port: {}".format(ParserResults.port))
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
-    print("full_host: {}".format(ParserResults.full_host))
 
     if ParserResults.port:
         cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port,
