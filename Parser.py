@@ -38,7 +38,7 @@ class Parser(object):
                 match_list.append(element)
         return " ".join(match_list)
 
-    class Rsync_options:
+    class Rsync_options():
         @staticmethod
         def parser(some_list):
             options_pattern = r'^(-\w+|--[\w\-\=]+[\w\d\/\.\_]+)'
