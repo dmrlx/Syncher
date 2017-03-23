@@ -141,7 +141,7 @@ class Interface(object):
     @staticmethod
     @property
     def interface(params):
-        pass
+        return None
 
 
 if __name__ == "__main__":
@@ -157,6 +157,7 @@ if __name__ == "__main__":
     print("port: {}".format(ParserResults.port))
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
+
 
     if ParserResults.port:
         cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port,
