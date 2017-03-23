@@ -1,10 +1,13 @@
 import subprocess
+import ArgsReceiver
 
-class ArgsReceiver(object): # Получает аргументы от CLI
-    pass
+# Class-receiver
+#class ArgsReceiver(object): 
+#    pass
 
 
-class ParserResults(object): # Класс глобальных переменных
+# Class of global vars
+class ParserResults(object): 
     cli = ""
     password = ""
     loc = ""
@@ -16,7 +19,8 @@ class ParserResults(object): # Класс глобальных переменн�
     full_host = ""
 
 
-class Parser(object): # Класс парсера с подклассами
+#Parser Class
+class Parser(object):
 
     class ParserPassword(object):
         @staticmethod
@@ -29,7 +33,9 @@ class Parser(object): # Класс парсера с подклассами
         def parser(self, some_list):
             pass
 
-class Throw_in(object): # Класс, обновляющий глобальные переменные (Нужно выполнить по ходу кода)
+
+#Class which update global vars
+class Throw_in(object):
     @staticmethod
     def parser_results():
         Parser_Results.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
@@ -42,13 +48,16 @@ class Throw_in(object): # Класс, обновляющий глобальны�
         Parser_Results.dist = Parser.Remote_directory.parser(ArgsReceiver.receiver())
         Parser_Results.full_host = Parser.remote_stuff(ArgsReceiver.receiver())
 
-class ValidateParams(object): # Класс валидатора
+
+# Validator class
+class ValidateParams(object):
     @staticmethod
     def validator(ParsResult):
         pass
 
 
-class Interface(object): # Класс и метод для доступа к скрипту снаружи
+#Interface class
+class Interface(object):
 
     @staticmethod
     @property
@@ -57,9 +66,9 @@ class Interface(object): # Класс и метод для доступа к с�
 
 
 if "__name__" == "__main__":
-    # Добавить проверку ОС
+    # Add OS check
 
     cmd = "rsync {} {} {} {}".format(ParserResults.cli, ParserResults.files, ParserResults.full_host, ParserResults.dist)
     PIPE = subprocess.PIPE
     p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
-    print(p.stdout.read())
+    print(p.stderr.read())
