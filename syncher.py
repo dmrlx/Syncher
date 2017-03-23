@@ -20,17 +20,17 @@ class ParserResults(object):
     port = ""
     host = ""
     dist = ""
-    full_host = ""
 
 
 # Parser class
 class Parser(object):
+
     @staticmethod
     def check_for_match(pattern, some_list):
         match_list = []
         for element in some_list:
             match = re.match(pattern, element)
-            if match:
+            if match or match is not None:
                 match_list.append(element)
         return " ".join(match_list)
 
@@ -41,8 +41,7 @@ class Parser(object):
             password_pattern = r'-pass=.+'
             options = Parser.check_for_match(options_pattern, some_list)
             password = Parser.check_for_match(password_pattern, some_list)
-            options = options.replace(password, '')
-            return options
+            return options.replace(password, '')
 
     class Password:
         @staticmethod
@@ -50,68 +49,70 @@ class Parser(object):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
-
-# Final
     class Local_directory:
         @staticmethod
         def parser(some_list):
             pattern = r'^/.+'
             return Parser.check_for_match(pattern, some_list)
 
-# Final (Files have no digits in extentions)
+# Files have no digits in extentions
     class Files:
         @staticmethod
         def parser(some_list):
-            pattern = r'^[^-].+\.\D+'
-            return Parser.check_for_match(pattern, some_list)
+            pattern = r'^[^-\/]{1,2}.+\D+$'
+            found = Parser.check_for_match(pattern, some_list)
+            remote_stuff = Parser.remote_stuff(some_list)
+            return found.replace(remote_stuff, '')
 
+# Can be no user nor host at all (checked)
     @staticmethod
     def remote_stuff(some_list):
-        pattern = r'^.+@.+'
+        pattern = r'^.*@.*'
         for element in some_list:
             remote = re.match(pattern, element)
-            if remote:
+            if remote or remote is not None:
                 return element
+        return ''
 
-# Final?!
-    class Remote_user():
+    class Remote_user:
         @staticmethod
         def parser(some_list):
-            pattern = r'^\w+[^\:\.\,]'
+            pattern = r'^\w+[^\:\.\,]*'
             remote_stuff = Parser.remote_stuff(some_list).split('@')
             user = re.match(pattern, remote_stuff[0])
-            if user:
+            if user or user is not None:
                 return user.group(0)
+            return ''
 
-# Final?!O_o
     class Remote_port:
         @staticmethod
         def parser(some_list):
             user = Parser.Remote_user.parser(some_list)
             remote_stuff = Parser.remote_stuff(some_list).split('@')
             port = remote_stuff[0].lstrip(user)
-            if port:
+            if port or port is not None:
                 port = port.lstrip(':,.')
             return port
 
-# Host may be ip-like
+# Host may be ip-like (i think)
     class Remote_host:
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list).split('@')
-            host_plus_dir = remote_stuff[1].split(':')
-            return host_plus_dir[0]
+            if len(remote_stuff) > 1:
+                host_plus_dir = remote_stuff[1].split(':')
+                return host_plus_dir[0]
+            return ''
 
     class Remote_directory:
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list).split('@')
-            host_plus_dir = remote_stuff[1].split(':')
-            if len(host_plus_dir) > 1:
-                return host_plus_dir[1]
-            else:
-                return ''
-
+            if len(remote_stuff) > 1:
+                host_plus_dir = remote_stuff[1].split(':')
+                if len(host_plus_dir) > 1:
+                    return host_plus_dir[1]
+            return ''
 
 # Class which update global vars
 class Throw_in(object):
@@ -125,7 +126,6 @@ class Throw_in(object):
         ParserResults.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
         ParserResults.host = Parser.Remote_host.parser(ArgsReceiver.receiver())
         ParserResults.dist = Parser.Remote_directory.parser(ArgsReceiver.receiver())
-        ParserResults.full_host = Parser.remote_stuff(ArgsReceiver.receiver())
 
 
 # Validator class
