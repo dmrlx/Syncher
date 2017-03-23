@@ -25,15 +25,6 @@ class ParserResults(object):
 # Parser class
 class Parser(object):
 
-    @staticmethod
-    def check_for_match(pattern, some_list):
-        match_list = []
-        for element in some_list:
-            match = re.match(pattern, element)
-            if match or match is not None:
-                match_list.append(element)
-        return " ".join(match_list)
-
     class Rsync_options():
         @staticmethod
         def parser(some_list):
@@ -43,19 +34,21 @@ class Parser(object):
             password = Parser.check_for_match(password_pattern, some_list)
             return options.replace(password, '')
 
+    # Password parser
     class Password:
         @staticmethod
         def parser(some_list):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
+    # Local dir parser
     class Local_directory:
         @staticmethod
         def parser(some_list):
             pattern = r'^/.+'
             return Parser.check_for_match(pattern, some_list)
 
-# Files have no digits in extentions
+    # Files have no digits in extentions
     class Files:
         @staticmethod
         def parser(some_list):
@@ -64,16 +57,7 @@ class Parser(object):
             remote_stuff = Parser.remote_stuff(some_list)
             return found.replace(remote_stuff, '')
 
-# Can be no user nor host at all (checked)
-    @staticmethod
-    def remote_stuff(some_list):
-        pattern = r'^.*@.*'
-        for element in some_list:
-            remote = re.match(pattern, element)
-            if remote or remote is not None:
-                return element
-        return ''
-
+    # User parser
     class Remote_user:
         @staticmethod
         def parser(some_list):
@@ -84,6 +68,7 @@ class Parser(object):
                 return user.group(0)
             return ''
 
+    # Remote port parser
     class Remote_port:
         @staticmethod
         def parser(some_list):
@@ -94,7 +79,7 @@ class Parser(object):
                 port = port.lstrip(':,.')
             return port
 
-# Host may be ip-like (i think)
+    # Host may be ip-like (i think)
     class Remote_host:
         @staticmethod
         def parser(some_list):
@@ -104,6 +89,7 @@ class Parser(object):
                 return host_plus_dir[0]
             return ''
 
+    # Remote directory parser
     class Remote_directory:
         @staticmethod
         def parser(some_list):
@@ -113,6 +99,26 @@ class Parser(object):
                 if len(host_plus_dir) > 1:
                     return host_plus_dir[1]
             return ''
+
+    # Can be no user nor host at all (checked)
+    @staticmethod
+    def remote_stuff(some_list):
+        pattern = r'^.*@.*'
+        for element in some_list:
+            remote = re.match(pattern, element)
+            if remote or remote is not None:
+                return element
+        return ''
+
+    @staticmethod
+    def check_for_match(pattern, some_list):
+        match_list = []
+        for element in some_list:
+            match = re.match(pattern, element)
+            if match or match is not None:
+                match_list.append(element)
+        return " ".join(match_list)
+
 
 # Class which update global vars
 class Throw_in(object):
@@ -186,15 +192,14 @@ if __name__ == "__main__":
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
 
+    # Run checker
     ValidateParams.do_validator()
 
     if ParserResults.port:
-        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port,
-                                                          ParserResults.user, ParserResults.host, ParserResults.dist)
+        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
         print("Full rsync: {}".format(cmd))
     else:
-        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user,
-                                            ParserResults.host, ParserResults.dist)
+        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
         print("Full rsync: {}".format(cmd))
 
     # PIPE = subprocess.PIPE
