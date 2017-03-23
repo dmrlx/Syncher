@@ -138,7 +138,6 @@ class ValidateParams(object):
             magic_number / len(parametr)
             return parametr
         except:
-            print("parametr type: {}".format(type(parametr)))
             print('Unfortunately, you forgot define {}!\nFormat rsync function : rsync [OPTION] ... SRC ... [USER@] HOST:DEST \nPlease, try again'.format(param_name))
             sys.exit(1)
 
