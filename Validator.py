@@ -9,16 +9,11 @@ class ValidateParams(object):
         except:
             print('Unfortunately, you forgot define {}!\nFormat rsync function : rsync [OPTION] ... SRC ... [USER@] HOST:DEST \nPlease, try again'.format(parametr))
             sys.exit(1)
-
-    class Local_directory:
+            
+    class Source_files:
         @staticmethod
         def validator():
-            return ValidateParams.Check_lenth(Parser_Results.loc)
-
-    class Local_files:
-        @staticmethod
-        def validator():
-            return ValidateParams.Check_lenth(Parser_Results.files)
+            return ValidateParams.Check_lenth(Parser_Results.loc+Parser_Results.files)
 
     class Username:
         @staticmethod
@@ -32,7 +27,7 @@ class ValidateParams(object):
 
     @staticmethod
     def do_validator():
-        ValidateParams.Local_directory.validator() or ValidateParams.Local_files.validator()
+        ValidateParams.Source_files.validator()
         ValidateParams.Username.validator()
         ValidateParams.Remote_host.validator()
 
