@@ -1,16 +1,17 @@
 import re
 import sys
 
-class ArgsReceiver:
+
+class Args:
     @staticmethod
     def receiver():
-        options_list = ['-a', '-av', '--pass-file=/take.here', "-pass='111'"]
-        dirs_list = ['/usr', '/usr/']
-        files_list = ['45.123', 'qwer.ty', 'e.t', 'word*']
-        users_list = ['user.13@host:/usr']
-        some_list = options_list + dirs_list + files_list + users_list
+        first_list = ['-a', '-av', '--pass-file=/take.here', "-pass='111'",
+                    '/usr', '/usr/', '45.123', 'qwer.ty', 'e.t', 'word*',
+                    'user.13@host:/usr']
+        some_list = ['-t', '*.c', 'foo:/ps']
         return some_list
-    
+
+
 class Parser_Results:
     cli = ""
     password = ""
@@ -20,6 +21,7 @@ class Parser_Results:
     port = ""
     host = ""
     dist = ""
+
 
 class Parser(object):
 
@@ -65,10 +67,14 @@ class Parser(object):
 # Can be no user nor host at all (checked)
     @staticmethod
     def remote_stuff(some_list):
-        pattern = r'^.*@.*'
+        pattern_full = r'^.+@.+'
+        pattern_host = r'^.+:.*'
         for element in some_list:
-            remote = re.match(pattern, element)
-            if remote or remote is not None:
+            remote_full = re.match(pattern_full, element)
+            remote_host = re.match(pattern_host, element)
+            if remote_full or remote_full is not None:
+                return element
+            elif remote_host or remote_host is not None:
                 return element
         return ''
 
@@ -76,61 +82,73 @@ class Parser(object):
         @staticmethod
         def parser(some_list):
             pattern = r'^\w+[^\:\.\,]*'
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            user = re.match(pattern, remote_stuff[0])
-            if user or user is not None:
-                return user.group(0)
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                user = re.match(pattern, remote_stuff)
+                if user or user is not None:
+                    return user.group(0)
             return ''
 
     class Remote_port:
         @staticmethod
         def parser(some_list):
             user = Parser.Remote_user.parser(some_list)
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            port = remote_stuff[0].lstrip(user)
-            if port or port is not None:
-                port = port.lstrip(':,.')
-            return port
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                remote_stuff = remote_stuff.split('@')
+                port = remote_stuff[0].lstrip(user)
+                if port or port is not None:
+                    port = port.lstrip(':,.')
+                return port
+            return ''
 
 # Host may be ip-like (i think)
     class Remote_host:
         @staticmethod
         def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            if len(remote_stuff) > 1:
-                host_plus_dir = remote_stuff[1].split(':')
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                host_plus_dir = remote_stuff.split('@')[1].split(':')
                 return host_plus_dir[0]
-            return ''
+            else:
+                host_plus_dir = remote_stuff.split(':')
+                return host_plus_dir[0]
 
     class Remote_directory:
         @staticmethod
         def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            if len(remote_stuff) > 1:
-                host_plus_dir = remote_stuff[1].split(':')
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                host_plus_dir = remote_stuff.split('@')[1].split(':')
                 if len(host_plus_dir) > 1:
                     return host_plus_dir[1]
-            return ''
+            else:
+                host_plus_dir = remote_stuff.split(':')
+                if len(host_plus_dir) > 1:
+                    return host_plus_dir[1]
+                return ''
+
 
 class Throw_in:
     @staticmethod
     def parser_results():
-        Parser_Results.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
-        Parser_Results.password = Parser.Password.parser(ArgsReceiver.receiver())
-        Parser_Results.loc = Parser.Local_directory.parser(ArgsReceiver.receiver())
-        Parser_Results.files = Parser.Files.parser(ArgsReceiver.receiver())
-        Parser_Results.user = Parser.Remote_user.parser(ArgsReceiver.receiver())
-        Parser_Results.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
-        Parser_Results.host = Parser.Remote_host.parser(ArgsReceiver.receiver())
-        Parser_Results.dist = Parser.Remote_directory.parser(ArgsReceiver.receiver())
-        
+        Parser_Results.cli = Parser.Rsync_options.parser(Args.receiver())
+        Parser_Results.password = Parser.Password.parser(Args.receiver())
+        Parser_Results.loc = Parser.Local_directory.parser(Args.receiver())
+        Parser_Results.files = Parser.Files.parser(Args.receiver())
+        Parser_Results.user = Parser.Remote_user.parser(Args.receiver())
+        Parser_Results.port = Parser.Remote_port.parser(Args.receiver())
+        Parser_Results.host = Parser.Remote_host.parser(Args.receiver())
+        Parser_Results.dist = Parser.Remote_directory.parser(Args.receiver())
+
+
 Throw_in.parser_results()
 print(sys.version)
-print(Parser_Results.cli)
-print(Parser_Results.password)
-print(Parser_Results.loc)
-print(Parser_Results.files)
-print(Parser_Results.user)
-print(Parser_Results.port)
-print(Parser_Results.host)
-print(Parser_Results.dist)
+print('options: ', Parser_Results.cli)
+print('password', Parser_Results.password)
+print('loc_dir: ', Parser_Results.loc)
+print('files: ', Parser_Results.files)
+print('user: ', Parser_Results.user)
+print('port: ', Parser_Results.port)
+print('host: ', Parser_Results.host)
+print('dist_dir: ', Parser_Results.dist)
