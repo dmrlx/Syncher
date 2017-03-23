@@ -7,6 +7,7 @@ class ArgsReceiver(object): # Получает аргументы от CLI
 class ParserResults(object): # Класс глобальных переменных
     cli = ""
     password = ""
+    loc = ""
     files = ""
     name = ""
     port = ""
@@ -28,6 +29,18 @@ class Parser(object): # Класс парсера с подклассами
         def parser(self, some_list):
             pass
 
+class Throw_in(object): # Класс, обновляющий глобальные переменные (Нужно выполнить по ходу кода)
+    @staticmethod
+    def parser_results():
+        Parser_Results.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
+        Parser_Results.password = Parser.Password.parser(ArgsReceiver.receiver())
+        Parser_Results.loc = Parser.Local_directory.parser(ArgsReceiver.receiver())
+        Parser_Results.files = Parser.Files.parser(ArgsReceiver.receiver())
+        Parser_Results.user = Parser.Remote_user.parser(ArgsReceiver.receiver())
+        Parser_Results.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
+        Parser_Results.host = Parser.Remote_host.parser(ArgsReceiver.receiver())
+        Parser_Results.dist = Parser.Remote_directory.parser(ArgsReceiver.receiver())
+        Parser_Results.full_host = Parser.remote_stuff(ArgsReceiver.receiver())
 
 class ValidateParams(object): # Класс валидатора
     @staticmethod
