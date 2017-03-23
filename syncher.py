@@ -22,8 +22,9 @@ class ParserResults(object):
     dist = ""
     full_host = ""
 
-class Parser(object):
 
+# Parser class
+class Parser(object):
     @staticmethod
     def check_for_match(pattern, some_list):
         match_list = []
@@ -111,7 +112,8 @@ class Parser(object):
             else:
                 return ''
 
-#Class which update global vars
+
+# Class which update global vars
 class Throw_in(object):
     @staticmethod
     def parser_results():
@@ -151,12 +153,15 @@ if __name__ == "__main__":
     print("password: {}".format(ParserResults.password))
     print("loc: {}".format(ParserResults.loc))
     print("files: {}".format(ParserResults.files))
+    print("name: {}".format(ParserResults.name))
     print("port: {}".format(ParserResults.port))
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
     print("full_host: {}".format(ParserResults.full_host))
 
-    # cmd = "rsync {} {} {} {}".format(ParserResults.cli, ParserResults.files, ParserResults.full_host, ParserResults.dist)
+    cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.name, ParserResults.host, ParserResults.dist)
+    print("Full rsync: {}".format(cmd))
+
     # PIPE = subprocess.PIPE
     # p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
     # print(p.stderr.read())
