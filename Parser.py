@@ -1,3 +1,4 @@
+"""
 import re
 import sys
 
@@ -17,6 +18,7 @@ class ArgsReceiver:
 class Parser_Results:
     cli = ""
     password = ""
+    loc = ""
     files = ""
     user = ""
     port = ""
@@ -24,8 +26,8 @@ class Parser_Results:
     dist = ""
     full_host = ""
 
-
-class Parser:
+"""
+class Parser(object):
 
     @staticmethod
     def check_for_match(pattern, some_list):
@@ -96,7 +98,7 @@ class Parser:
                 port = port.lstrip(':,.')
             return port
 
-# Host may be ip-like, need to check
+# Host may be ip-like
     class Remote_host:
         @staticmethod
         def parser(some_list):
@@ -114,12 +116,13 @@ class Parser:
             else:
                 return ''
 
-
+"""
 class Throw_in:
     @staticmethod
     def parser_results():
         Parser_Results.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
         Parser_Results.password = Parser.Password.parser(ArgsReceiver.receiver())
+        Parser_Results.loc = Parser.Local_directory.parser(ArgsReceiver.receiver())
         Parser_Results.files = Parser.Files.parser(ArgsReceiver.receiver())
         Parser_Results.user = Parser.Remote_user.parser(ArgsReceiver.receiver())
         Parser_Results.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
@@ -132,9 +135,11 @@ Throw_in.parser_results()
 print(sys.version)
 print(Parser_Results.cli)
 print(Parser_Results.password)
+print(Parser_Results.loc)
 print(Parser_Results.files)
 print(Parser_Results.user)
 print(Parser_Results.port)
 print(Parser_Results.host)
 print(Parser_Results.dist)
 print(Parser_Results.full_host)
+"""
