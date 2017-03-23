@@ -16,7 +16,7 @@ class ParserResults(object):
     password = ""
     loc = ""
     files = ""
-    name = ""
+    user = ""
     port = ""
     host = ""
     dist = ""
@@ -153,14 +153,20 @@ if __name__ == "__main__":
     print("password: {}".format(ParserResults.password))
     print("loc: {}".format(ParserResults.loc))
     print("files: {}".format(ParserResults.files))
-    print("name: {}".format(ParserResults.name))
+    print("user: {}".format(ParserResults.user))
     print("port: {}".format(ParserResults.port))
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
     print("full_host: {}".format(ParserResults.full_host))
 
-    cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.name, ParserResults.host, ParserResults.dist)
-    print("Full rsync: {}".format(cmd))
+    if ParserResults.port:
+        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port,
+                                                          ParserResults.user, ParserResults.host, ParserResults.dist)
+        print("Full rsync: {}".format(cmd))
+    else:
+        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user,
+                                            ParserResults.host, ParserResults.dist)
+        print("Full rsync: {}".format(cmd))
 
     # PIPE = subprocess.PIPE
     # p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
