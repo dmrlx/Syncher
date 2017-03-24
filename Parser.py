@@ -12,7 +12,7 @@ class Args:
         return some_list
 
 
-class Parser_Results:
+class ParserResults:
     cli = ""
     password = ""
     loc = ""
@@ -34,7 +34,7 @@ class Parser(object):
                 match_list.append(element)
         return " ".join(match_list)
 
-    class Rsync_options():
+    class Options:
         @staticmethod
         def parser(some_list):
             options_pattern = r'^(-\w+|--[\w\-\=]+[\w\d\/\.\_]+)'
@@ -49,7 +49,7 @@ class Parser(object):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
-    class Local_directory:
+    class LocalDirectory:
         @staticmethod
         def parser(some_list):
             pattern = r'^/.+'
@@ -78,7 +78,7 @@ class Parser(object):
                 return element
         return ''
 
-    class Remote_user:
+    class RemoteUser:
         @staticmethod
         def parser(some_list):
             pattern = r'^\w+[^\:\.\,]*'
@@ -89,10 +89,10 @@ class Parser(object):
                     return user.group(0)
             return ''
 
-    class Remote_port:
+    class RemotePort:
         @staticmethod
         def parser(some_list):
-            user = Parser.Remote_user.parser(some_list)
+            user = Parser.RemoteUser.parser(some_list)
             remote_stuff = Parser.remote_stuff(some_list)
             if '@' in remote_stuff:
                 remote_stuff = remote_stuff.split('@')
@@ -103,7 +103,7 @@ class Parser(object):
             return ''
 
 # Host may be ip-like (i think)
-    class Remote_host:
+    class RemoteHost:
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
@@ -114,7 +114,7 @@ class Parser(object):
                 host_plus_dir = remote_stuff.split(':')
                 return host_plus_dir[0]
 
-    class Remote_directory:
+    class RemoteDirectory:
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
@@ -129,26 +129,26 @@ class Parser(object):
                 return ''
 
 
-class Throw_in:
+class ThrowIn:
     @staticmethod
     def parser_results():
-        Parser_Results.cli = Parser.Rsync_options.parser(Args.receiver())
+        Parser_Results.cli = Parser.Options.parser(Args.receiver())
         Parser_Results.password = Parser.Password.parser(Args.receiver())
-        Parser_Results.loc = Parser.Local_directory.parser(Args.receiver())
+        Parser_Results.loc = Parser.LocalDirectory.parser(Args.receiver())
         Parser_Results.files = Parser.Files.parser(Args.receiver())
-        Parser_Results.user = Parser.Remote_user.parser(Args.receiver())
-        Parser_Results.port = Parser.Remote_port.parser(Args.receiver())
-        Parser_Results.host = Parser.Remote_host.parser(Args.receiver())
-        Parser_Results.dist = Parser.Remote_directory.parser(Args.receiver())
+        Parser_Results.user = Parser.RemoteUser.parser(Args.receiver())
+        Parser_Results.port = Parser.RemotePort.parser(Args.receiver())
+        Parser_Results.host = Parser.RemoteHost.parser(Args.receiver())
+        Parser_Results.dist = Parser.RemoteDirectory.parser(Args.receiver())
 
 
-Throw_in.parser_results()
+ThrowIn.parser_results()
 print(sys.version)
-print('options: ', Parser_Results.cli)
-print('password', Parser_Results.password)
-print('loc_dir: ', Parser_Results.loc)
-print('files: ', Parser_Results.files)
-print('user: ', Parser_Results.user)
-print('port: ', Parser_Results.port)
-print('host: ', Parser_Results.host)
-print('dist_dir: ', Parser_Results.dist)
+print('options: ', ParserResults.cli)
+print('password', ParserResults.password)
+print('loc_dir: ', ParserResults.loc)
+print('files: ', ParserResults.files)
+print('user: ', ParserResults.user)
+print('port: ', ParserResults.port)
+print('host: ', ParserResults.host)
+print('dist_dir: ', ParserResults.dist)
