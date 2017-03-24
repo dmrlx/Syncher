@@ -78,6 +78,9 @@ class Parser(object):
             if port or port is not None:
                 port = port.lstrip(':,.')
             return port
+    
+    class Test:
+        pass
 
     # Host may be ip-like (i think)
     class Remote_host:
