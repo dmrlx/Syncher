@@ -132,14 +132,14 @@ class Parser(object):
 class ThrowIn:
     @staticmethod
     def parser_results():
-        Parser_Results.cli = Parser.Options.parser(Args.receiver())
-        Parser_Results.password = Parser.Password.parser(Args.receiver())
-        Parser_Results.loc = Parser.LocalDirectory.parser(Args.receiver())
-        Parser_Results.files = Parser.Files.parser(Args.receiver())
-        Parser_Results.user = Parser.RemoteUser.parser(Args.receiver())
-        Parser_Results.port = Parser.RemotePort.parser(Args.receiver())
-        Parser_Results.host = Parser.RemoteHost.parser(Args.receiver())
-        Parser_Results.dist = Parser.RemoteDirectory.parser(Args.receiver())
+        ParserResults.cli = Parser.Options.parser(Args.receiver())
+        ParserResults.password = Parser.Password.parser(Args.receiver())
+        ParserResults.loc = Parser.LocalDirectory.parser(Args.receiver())
+        ParserResults.files = Parser.Files.parser(Args.receiver())
+        ParserResults.user = Parser.RemoteUser.parser(Args.receiver())
+        ParserResults.port = Parser.RemotePort.parser(Args.receiver())
+        ParserResults.host = Parser.RemoteHost.parser(Args.receiver())
+        ParserResults.dist = Parser.RemoteDirectory.parser(Args.receiver())
 
 
 ThrowIn.parser_results()
