@@ -12,7 +12,7 @@ class Args:
         return some_list
 
 
-class ParserResults:
+class ParserResults(object):
     cli = ""
     password = ""
     loc = ""
@@ -30,7 +30,7 @@ class Parser(object):
         match_list = []
         for element in some_list:
             match = re.match(pattern, element)
-            if match or match is not None:
+            if match:
                 match_list.append(element)
         return " ".join(match_list)
 
@@ -64,7 +64,7 @@ class Parser(object):
             remote_stuff = Parser.remote_stuff(some_list)
             return found.replace(remote_stuff, '')
 
-# Can be no user nor host at all (checked)
+# Can be no user nor host at all
     @staticmethod
     def remote_stuff(some_list):
         pattern_full = r'^.+@.+'
@@ -72,9 +72,9 @@ class Parser(object):
         for element in some_list:
             remote_full = re.match(pattern_full, element)
             remote_host = re.match(pattern_host, element)
-            if remote_full or remote_full is not None:
+            if remote_full:
                 return element
-            elif remote_host or remote_host is not None:
+            elif remote_host:
                 return element
         return ''
 
@@ -85,8 +85,8 @@ class Parser(object):
             remote_stuff = Parser.remote_stuff(some_list)
             if '@' in remote_stuff:
                 user = re.match(pattern, remote_stuff)
-                if user or user is not None:
-                    return user.group(0)
+            if user:
+                return user.group(0)
             return ''
 
     class RemotePort:
@@ -97,12 +97,12 @@ class Parser(object):
             if '@' in remote_stuff:
                 remote_stuff = remote_stuff.split('@')
                 port = remote_stuff[0].lstrip(user)
-                if port or port is not None:
-                    port = port.lstrip(':,.')
+            if port:
+                port = port.lstrip(':,.')
                 return port
             return ''
 
-# Host may be ip-like (i think)
+# Host may be ip-like
     class RemoteHost:
         @staticmethod
         def parser(some_list):
@@ -128,8 +128,8 @@ class Parser(object):
                     return host_plus_dir[1]
                 return ''
 
-
-class ThrowIn:
+# Attention! Class Args (Not ArgsReceiver)
+class ThrowIn(object):
     @staticmethod
     def parser_results():
         ParserResults.cli = Parser.Options.parser(Args.receiver())
@@ -144,11 +144,11 @@ class ThrowIn:
 
 ThrowIn.parser_results()
 print(sys.version)
-print('options: ', ParserResults.cli)
-print('password', ParserResults.password)
-print('loc_dir: ', ParserResults.loc)
-print('files: ', ParserResults.files)
-print('user: ', ParserResults.user)
-print('port: ', ParserResults.port)
-print('host: ', ParserResults.host)
-print('dist_dir: ', ParserResults.dist)
+print('options:{}'.format(ParserResults.cli))
+print('password:{}'.format(ParserResults.password))
+print('loc_dir:{}'.format(ParserResults.loc))
+print('files:{}'.format(ParserResults.files))
+print('user:{}'.format(ParserResults.user))
+print('port:{}'.format(ParserResults.port))
+print('host:{}'.format(ParserResults.host))
+print('dist_dir:{}'.format(ParserResults.dist))
