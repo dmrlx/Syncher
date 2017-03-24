@@ -78,7 +78,7 @@ class Parser(object):
             if port or port is not None:
                 port = port.lstrip(':,.')
             return port
-    
+
     class Test:
         pass
 
@@ -172,15 +172,24 @@ class ValidateParams(object):
         ValidateParams.Remote_host.validator()
 
 
-#Interface class
-class Interface(object):
-
-    @staticmethod
-    @property
-    def interface(params):
-        return None
-
-
+#Interface function
+def interface(cli=None, password=None, files=None, user=None, port=None, host=None, dist=None):
+    ParserResults.cli = cli
+    ParserResults.password = password
+    ParserResults.files = files
+    ParserResults.user = user
+    ParserResults.port = port
+    ParserResults.host = host
+    ParserResults.dist = dist
+    ValidateParams.do_validator()
+    # Compiler.compile()
+    if ParserResults.port:
+        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
+        print("Full rsync: {}".format(cmd))
+    else:
+        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
+        print("Full rsync: {}".format(cmd))
+        
 if __name__ == "__main__":
     # Add OS check
 
