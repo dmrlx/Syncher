@@ -50,13 +50,21 @@ class ValidateParams(object):
             print("Rsync was successfully installed!")
         except:
             print("OOps..! Rsync wasn't installed on your machine! Please, check machine's configuration and try again!")    
-        
+   
+    @staticmethod
+    def Check_availability():
+        if subprocess.call('ping -c1 {} > /dev/null'.format(ParserResults.host), shell=True) == 0:
+            pass
+        else:
+            print('Remote host {} is not reachable!\nPlease, try again later'.format(ParserResults.host))
+            sys.exit(1)
+
     @staticmethod
     def do_validator():
         ValidateParams.Source_files.validator()
         ValidateParams.Username.validator()
         ValidateParams.Remote_host.validator()
         ValidateParams.Check_local_os_version()
-
+        ValidateParams.Check_availability()
 
 ValidateParams.do_validator()
