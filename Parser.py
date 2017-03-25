@@ -8,7 +8,7 @@ class Args:
         first_list = ['-a', '-av', '--pass-file=/take.here', "-pass='111'",
                     '/usr', '/usr/', '45.123', 'qwer.ty', 'e.t', 'word*',
                     'user.13@host:/usr']
-        some_list = ['-t', '*.c', 'foo:/ps']
+        some_list = ['-t', '*.c', 'foo:/ps', "'-e ssh -P -i'"]
         return some_list
 
 
@@ -85,8 +85,8 @@ class Parser(object):
             remote_stuff = Parser.remote_stuff(some_list)
             if '@' in remote_stuff:
                 user = re.match(pattern, remote_stuff)
-            if user:
-                return user.group(0)
+                if user:
+                    return user.group(0)
             return ''
 
     class RemotePort:
@@ -97,9 +97,9 @@ class Parser(object):
             if '@' in remote_stuff:
                 remote_stuff = remote_stuff.split('@')
                 port = remote_stuff[0].lstrip(user)
-            if port:
-                port = port.lstrip(':,.')
-                return port
+                if port:
+                    port = port.lstrip(':,.')
+                    return port
             return ''
 
 # Host may be ip-like
