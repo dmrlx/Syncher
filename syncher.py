@@ -244,27 +244,10 @@ if __name__ == "__main__":
     # Run filling of vars
     Throw_in.parser_results()
 
-    # Debug info
-    # print("cli: {}".format(ParserResults.cli))
-    # print("password: {}".format(ParserResults.password))
-    # print("files: {}".format(ParserResults.files))
-    # print("user: {}".format(ParserResults.user))
-    # print("port: {}".format(ParserResults.port))
-    # print("host: {}".format(ParserResults.host))
-    # print("dist: {}".format(ParserResults.dist))
-
     # Run validator
     ValidateParams.do_validator()
 
     print(Composer.composer())
-
-    # Check port existing
-    # if ParserResults.port:
-    #     cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
-    #     print("Full rsync: {}".format(cmd))
-    # else:
-    #     cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
-    #     print("Full rsync: {}".format(cmd))
 
     # PIPE = subprocess.PIPE
     # p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
