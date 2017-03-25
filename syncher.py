@@ -1,5 +1,10 @@
+"""
+Add module inf
+"""
+
 import re
 import sys
+import platform
 import subprocess
 
 
@@ -12,19 +17,18 @@ class ArgsReceiver(object):
 
 # Class of global vars
 class ParserResults(object):
-    cli = ""
-    password = ""
+    cli = ""        # Params
+    password = ""   # Password
     loc = ""
-    files = ""
-    user = ""
-    port = ""
-    host = ""
-    dist = ""
+    files = ""      # Sincable files and folders
+    user = ""       # User name
+    port = ""       # Port (if needed)
+    host = ""       # Host name
+    dist = ""       # Distenation folder
 
 
 # Parser class
 class Parser(object):
-
     class Rsync_options():
         @staticmethod
         def parser(some_list):
@@ -41,8 +45,7 @@ class Parser(object):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
-    # Local dir parser
-    class Local_directory:
+    class LocalDirectory:
         @staticmethod
         def parser(some_list):
             pattern = r'^/.+'
@@ -78,9 +81,6 @@ class Parser(object):
             if port or port is not None:
                 port = port.lstrip(':,.')
             return port
-
-    class Test:
-        pass
 
     # Host may be ip-like (i think)
     class Remote_host:
@@ -129,7 +129,7 @@ class Throw_in(object):
     def parser_results():
         ParserResults.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
         ParserResults.password = Parser.Password.parser(ArgsReceiver.receiver())
-        ParserResults.loc = Parser.Local_directory.parser(ArgsReceiver.receiver())
+        ParserResults.loc = Parser.LocalDirectory.parser(ArgsReceiver.receiver())
         ParserResults.files = Parser.Files.parser(ArgsReceiver.receiver())
         ParserResults.user = Parser.Remote_user.parser(ArgsReceiver.receiver())
         ParserResults.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
@@ -139,6 +139,8 @@ class Throw_in(object):
 
 # Validator class
 class ValidateParams(object):
+
+    import platform, sys, os, subprocess
 
     @staticmethod
     def Check_length(parametr, param_name):
@@ -166,10 +168,63 @@ class ValidateParams(object):
             return ValidateParams.Check_length(ParserResults.host, "host")
 
     @staticmethod
+    def Check_local_os_version():   # Check local OS
+        if platform.system() == "Linux":
+            ValidateParams.Check_exists()   #Check does exist rsync on local machine
+        else:
+            print('Unfortunately, your OS is {}! Rsync works only with Unix-like systems.'.format(platform.system()))
+            sys.exit(1)
+
+    @staticmethod
+    def Check_exists(): #Check does exist rsync on local machine
+        if subprocess.call('which rsync > /dev/null', shell=True) == 0:
+            pass
+        else:
+            print("Unfortunately, rsync doesn't exist on your machine! Let's install it!")
+            ValidateParams.Install_rsync()  #Install rsync on local machine
+
+    @staticmethod
+    def Install_rsync():    #Install rsync on local machine
+        try:
+            subprocess.call('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null', shell=True)
+            print("Rsync was successfully installed!")
+        except:
+            print("OOps..! Rsync wasn't installed on your machine! Please, check machine's configuration and try again!")    
+
+    @staticmethod
     def do_validator():
         ValidateParams.Source_files.validator()
         ValidateParams.Username.validator()
         ValidateParams.Remote_host.validator()
+        ValidateParams.Check_local_os_version()
+
+
+
+class Composer(object):
+    @staticmethod
+    def composer():
+        cmd = "rsync "
+        if ParserResults.port:
+            ssh_param = "-e \"ssh -p {}\" ".format(ParserResults.port)
+        else:
+            ssh_param = "ssh "
+
+        if ParserResults.loc:
+            loc_param = ParserResults.loc
+        else:
+            loc_param = ""
+
+        if ParserResults.files:
+            files_param = ParserResults.files
+        else:
+            files_param = ""
+
+        if ParserResults.dist:
+            dist_param = ":" + ParserResults.dist
+        else:
+            dist_param = ""
+
+        return cmd + ssh_param + loc_param + files_param + " " + ParserResults.user + "@" + ParserResults.host + dist_param
 
 
 #Interface function
@@ -182,37 +237,34 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.host = host
     ParserResults.dist = dist
     ValidateParams.do_validator()
-    # Compiler.compile()
-    if ParserResults.port:
-        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
-        print("Full rsync: {}".format(cmd))
-    else:
-        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
-        print("Full rsync: {}".format(cmd))
-        
+
 if __name__ == "__main__":
     # Add OS check
 
-    # Debug info
+    # Run filling of vars
     Throw_in.parser_results()
-    print("cli: {}".format(ParserResults.cli))
-    print("password: {}".format(ParserResults.password))
-    print("loc: {}".format(ParserResults.loc))
-    print("files: {}".format(ParserResults.files))
-    print("user: {}".format(ParserResults.user))
-    print("port: {}".format(ParserResults.port))
-    print("host: {}".format(ParserResults.host))
-    print("dist: {}".format(ParserResults.dist))
 
-    # Run checker
+    # Debug info
+    # print("cli: {}".format(ParserResults.cli))
+    # print("password: {}".format(ParserResults.password))
+    # print("files: {}".format(ParserResults.files))
+    # print("user: {}".format(ParserResults.user))
+    # print("port: {}".format(ParserResults.port))
+    # print("host: {}".format(ParserResults.host))
+    # print("dist: {}".format(ParserResults.dist))
+
+    # Run validator
     ValidateParams.do_validator()
 
-    if ParserResults.port:
-        cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
-        print("Full rsync: {}".format(cmd))
-    else:
-        cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
-        print("Full rsync: {}".format(cmd))
+    print(Composer.composer())
+
+    # Check port existing
+    # if ParserResults.port:
+    #     cmd = "rsync {} {} \"ssh -p {}\" {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.port, ParserResults.user, ParserResults.host, ParserResults.dist)
+    #     print("Full rsync: {}".format(cmd))
+    # else:
+    #     cmd = "rsync {} {} {}:{} {}".format(ParserResults.cli, ParserResults.files, ParserResults.user, ParserResults.host, ParserResults.dist)
+    #     print("Full rsync: {}".format(cmd))
 
     # PIPE = subprocess.PIPE
     # p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
