@@ -237,10 +237,9 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.host = host
     ParserResults.dist = dist
     ValidateParams.do_validator()
+    Composer.composer()
 
 if __name__ == "__main__":
-    # Add OS check
-
     # Run filling of vars
     Throw_in.parser_results()
 
