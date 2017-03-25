@@ -1,4 +1,6 @@
 class ValidateParams(object):
+    
+    import platform, sys, os, subprocess
 
     @staticmethod
     def Check_length(parametr, param_name):
@@ -24,12 +26,37 @@ class ValidateParams(object):
         @staticmethod
         def validator():
             return ValidateParams.Check_length(ParserResults.host, "host")
+    
+    @staticmethod
+    def Check_local_os_version():   # Check local OS
+        if platform.system() == "Linux":
+            ValidateParams.Check_exists()   #Check does exist rsync on local machine
+        else:
+            print('Unfortunately, your OS is {}! Rsync works only with Unix-like systems'.format(platform.system()))
+            sys.exit(1)
 
+    @staticmethod
+    def Check_exists(): #Check does exist rsync on local machine
+        if subprocess.call('which rsync > /dev/null', shell=True) == 0:
+            pass
+        else:
+            print("Unfortunately, rsync doesn't exist on your machine! Let's install it!")
+            ValidateParams.Install_rsync()  #Install rsync on local machine
+
+    @staticmethod
+    def Install_rsync():    #Install rsync on local machine
+        try:
+            subprocess.call('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null', shell=True)
+            print("Rsync was successfully installed!")
+        except:
+            print("OOps..! Rsync wasn't installed on your machine! Please, check machine's configuration and try again!")    
+        
     @staticmethod
     def do_validator():
         ValidateParams.Source_files.validator()
         ValidateParams.Username.validator()
         ValidateParams.Remote_host.validator()
+        ValidateParams.Check_local_os_version()
 
 
 ValidateParams.do_validator()
