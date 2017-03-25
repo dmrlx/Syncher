@@ -2,14 +2,14 @@ import re
 import sys
 
 
-class Args:
+class ArgsReceiver:
     @staticmethod
     def receiver():
-        first_list = ['-a', '-av', '--pass-file=/take.here', "-pass='111'",
-                    '/usr', '/usr/', '45.123', 'qwer.ty', 'e.t', 'word*',
-                    'user.13@host:/usr']
+        first_list = ['-a', '-av', '-e', "'ssh -P -i'", "'-e ssh -P -i'", '--pass-file=/take.here',
+                      "-pass='111'", '/usr', '/usr/', '45.123', 'qwer.ty', 'e.t', 'word*',
+                      'user.13@host:/usr']
         some_list = ['-t', '*.c', 'foo:/ps', "'-e ssh -P -i'"]
-        return some_list
+        return first_list
 
 
 class ParserResults(object):
@@ -35,21 +35,24 @@ class Parser(object):
         return " ".join(match_list)
 
     class Options:
+
         @staticmethod
         def parser(some_list):
-            options_pattern = r'^(-\w+|--[\w\-\=]+[\w\d\/\.\_]+)'
+            options_pattern = r'(^-\w+|^--[\w\-\=]+[\w\d\/\.\_]+|^[\'"].+[\'"]$)'
             password_pattern = r'-pass=.+'
             options = Parser.check_for_match(options_pattern, some_list)
             password = Parser.check_for_match(password_pattern, some_list)
             return options.replace(password, '')
 
     class Password:
+
         @staticmethod
         def parser(some_list):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
     class LocalDirectory:
+
         @staticmethod
         def parser(some_list):
             pattern = r'^/.+'
@@ -57,9 +60,10 @@ class Parser(object):
 
 # Files have no digits in extentions
     class Files:
+
         @staticmethod
         def parser(some_list):
-            pattern = r'^[^-\/]{1,2}.+\D+$'
+            pattern = r'^[^-/\'"]{1,2}.+\D+$'
             found = Parser.check_for_match(pattern, some_list)
             remote_stuff = Parser.remote_stuff(some_list)
             return found.replace(remote_stuff, '')
@@ -79,6 +83,7 @@ class Parser(object):
         return ''
 
     class RemoteUser:
+
         @staticmethod
         def parser(some_list):
             pattern = r'^\w+[^\:\.\,]*'
@@ -90,6 +95,7 @@ class Parser(object):
             return ''
 
     class RemotePort:
+
         @staticmethod
         def parser(some_list):
             user = Parser.RemoteUser.parser(some_list)
@@ -104,6 +110,7 @@ class Parser(object):
 
 # Host may be ip-like
     class RemoteHost:
+
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
@@ -115,6 +122,7 @@ class Parser(object):
                 return host_plus_dir[0]
 
     class RemoteDirectory:
+
         @staticmethod
         def parser(some_list):
             remote_stuff = Parser.remote_stuff(some_list)
@@ -128,18 +136,19 @@ class Parser(object):
                     return host_plus_dir[1]
                 return ''
 
-# Attention! Class Args (Not ArgsReceiver)
+
 class ThrowIn(object):
+
     @staticmethod
     def parser_results():
-        ParserResults.cli = Parser.Options.parser(Args.receiver())
-        ParserResults.password = Parser.Password.parser(Args.receiver())
-        ParserResults.loc = Parser.LocalDirectory.parser(Args.receiver())
-        ParserResults.files = Parser.Files.parser(Args.receiver())
-        ParserResults.user = Parser.RemoteUser.parser(Args.receiver())
-        ParserResults.port = Parser.RemotePort.parser(Args.receiver())
-        ParserResults.host = Parser.RemoteHost.parser(Args.receiver())
-        ParserResults.dist = Parser.RemoteDirectory.parser(Args.receiver())
+        ParserResults.cli = Parser.Options.parser(ArgsReceiver.receiver())
+        ParserResults.password = Parser.Password.parser(ArgsReceiver.receiver())
+        ParserResults.loc = Parser.LocalDirectory.parser(ArgsReceiver.receiver())
+        ParserResults.files = Parser.Files.parser(ArgsReceiver.receiver())
+        ParserResults.user = Parser.RemoteUser.parser(ArgsReceiver.receiver())
+        ParserResults.port = Parser.RemotePort.parser(ArgsReceiver.receiver())
+        ParserResults.host = Parser.RemoteHost.parser(ArgsReceiver.receiver())
+        ParserResults.dist = Parser.RemoteDirectory.parser(ArgsReceiver.receiver())
 
 
 ThrowIn.parser_results()
