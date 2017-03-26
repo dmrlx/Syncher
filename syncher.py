@@ -199,7 +199,6 @@ class ValidateParams(object):
         ValidateParams.Check_local_os_version()
 
 
-
 class Composer(object):
     @staticmethod
     def composer():
@@ -209,13 +208,18 @@ class Composer(object):
         else:
             ssh_param = "ssh "
 
+        if ParserResults.cli:
+            cli_param = ParserResults.cli + " "
+        else:
+            cli_param = ""
+
         if ParserResults.loc:
-            loc_param = ParserResults.loc
+            loc_param = ParserResults.loc + " "
         else:
             loc_param = ""
 
         if ParserResults.files:
-            files_param = ParserResults.files
+            files_param = ParserResults.files + " "
         else:
             files_param = ""
 
@@ -224,7 +228,8 @@ class Composer(object):
         else:
             dist_param = ""
 
-        return cmd + ssh_param + loc_param + files_param + " " + ParserResults.user + "@" + ParserResults.host + dist_param
+        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
+               "@" + ParserResults.host + dist_param
 
 
 #Interface function
@@ -239,6 +244,7 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ValidateParams.do_validator()
     Composer.composer()
 
+
 if __name__ == "__main__":
     # Run filling of vars
     Throw_in.parser_results()
@@ -246,8 +252,8 @@ if __name__ == "__main__":
     # Run validator
     ValidateParams.do_validator()
 
-    print(Composer.composer())
+    cmd = Composer.composer()
 
-    # PIPE = subprocess.PIPE
-    # p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
-    # print(p.stderr.read())
+    PIPE = subprocess.PIPE
+    p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
+    print(p.stderr.read())
