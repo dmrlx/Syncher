@@ -206,7 +206,7 @@ class Composer(object):
         if ParserResults.port:
             ssh_param = "-e \"ssh -p {}\" ".format(ParserResults.port)
         else:
-            ssh_param = "ssh "
+            ssh_param = ""
 
         if ParserResults.cli:
             cli_param = ParserResults.cli + " "
@@ -215,6 +215,7 @@ class Composer(object):
 
         if ParserResults.loc:
             loc_param = ParserResults.loc + " "
+            cli_param += "r"                        # for recursive folders copy
         else:
             loc_param = ""
 
@@ -228,8 +229,7 @@ class Composer(object):
         else:
             dist_param = ""
 
-        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
-               "@" + ParserResults.host + dist_param
+        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
 
 #Interface function
@@ -242,7 +242,17 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.host = host
     ParserResults.dist = dist
     ValidateParams.do_validator()
-    Composer.composer()
+    cmd = Composer.composer()
+    PIPE = subprocess.PIPE
+    p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
+
+
+class Runner(object):
+    def ssh_runner():
+        pass
+    
+    def rsync_runner():
+        pass
 
 
 if __name__ == "__main__":
@@ -253,7 +263,6 @@ if __name__ == "__main__":
     ValidateParams.do_validator()
 
     cmd = Composer.composer()
-
     PIPE = subprocess.PIPE
     p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
     print(p.stderr.read())
