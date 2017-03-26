@@ -7,7 +7,7 @@ class ArgsReceiver:
     def receiver():
         first_list = ['-a', "'ssh -P -i'", "'-e ssh -P -i'", '--pass-file=/take.here',
                       "-pass='111'", './123', './1*', '/usr', '/usr/word*', '45.123', 'qwer.ty', 'e.t',
-                      'user.13@host:/usr']
+                      'user@host:/usr']
         some_list = ['-t', '*.c', 'foo:/ps', "'-e ssh -P -i'"]
         return first_list
 
@@ -77,10 +77,11 @@ class Parser(object):
 
         @staticmethod
         def parser(some_list):
-            pattern = r'^\w+[^\:\.\,]*'
+            pattern = r'^\w+[^\:\.\,\@]*'
             remote_stuff = Parser.remote_stuff(some_list)
             if '@' in remote_stuff:
                 user = re.match(pattern, remote_stuff)
+                print(user)
                 if user:
                     return user.group(0)
             return ''
