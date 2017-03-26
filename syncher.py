@@ -126,19 +126,19 @@ class ThrowIn(object):
     @staticmethod
     def parser_results():
         ParserResults.cli = Parser.Options.parser(ArgsReceiver.receiver())
-        print("cli: {}".format(ParserResults.cli))
+        # print("cli: {}".format(ParserResults.cli))
         ParserResults.password = Parser.Password.parser(ArgsReceiver.receiver())
-        print("password: {}".format(ParserResults.password))
+        # print("password: {}".format(ParserResults.password))
         ParserResults.dirs_and_files = Parser.DirsAndFiles.parser(ArgsReceiver.receiver())
-        print("dirs and files: {}".format(ParserResults.dirs_and_files))
+        # print("dirs and files: {}".format(ParserResults.dirs_and_files))
         ParserResults.user = Parser.RemoteUser.parser(ArgsReceiver.receiver())
-        print("user: {}".format(ParserResults.user))
+        # print("user: {}".format(ParserResults.user))
         ParserResults.port = Parser.RemotePort.parser(ArgsReceiver.receiver())
-        print("port: {}".format(ParserResults.port))
+        # print("port: {}".format(ParserResults.port))
         ParserResults.host = Parser.RemoteHost.parser(ArgsReceiver.receiver())
-        print("host: {}".format(ParserResults.host))
+        # print("host: {}".format(ParserResults.host))
         ParserResults.dist = Parser.RemoteDirectory.parser(ArgsReceiver.receiver())
-        print("dist: {}".format(ParserResults.dist))
+        # print("dist: {}".format(ParserResults.dist))
 
 
 # Validator class
@@ -226,7 +226,6 @@ class Composer(object):
         else:
             dist_param = ":"
 
-        print(cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param)
         return cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
 class Runner(object):
