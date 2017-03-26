@@ -19,7 +19,6 @@ class ArgsReceiver(object):
 class ParserResults(object):
     cli = ""        # Params
     password = ""   # Password
-    loc = ""
     files = ""      # Sincable files and folders
     user = ""       # User name
     port = ""       # Port (if needed)
@@ -206,17 +205,12 @@ class Composer(object):
         if ParserResults.port:
             ssh_param = "-e \"ssh -p {}\" ".format(ParserResults.port)
         else:
-            ssh_param = "ssh "
+            ssh_param = ""
 
         if ParserResults.cli:
             cli_param = ParserResults.cli + " "
         else:
             cli_param = ""
-
-        if ParserResults.loc:
-            loc_param = ParserResults.loc + " "
-        else:
-            loc_param = ""
 
         if ParserResults.files:
             files_param = ParserResults.files + " "
@@ -228,9 +222,17 @@ class Composer(object):
         else:
             dist_param = ""
 
-        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
-               "@" + ParserResults.host + dist_param
+        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
+class Runner(object):
+    @staticmethod
+    def rsync_runner():
+        ValidateParams.do_validator()
+        cmd = Composer.composer()
+        print(cmd)
+        print(ParserResults.loc)
+        PIPE = subprocess.PIPE
+        p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
 
 #Interface function
 def interface(cli=None, password=None, files=None, user=None, port=None, host=None, dist=None):
@@ -241,19 +243,9 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.port = port
     ParserResults.host = host
     ParserResults.dist = dist
-    ValidateParams.do_validator()
-    Composer.composer()
-
+    Runner.rsync_runner()
 
 if __name__ == "__main__":
     # Run filling of vars
     Throw_in.parser_results()
-
-    # Run validator
-    ValidateParams.do_validator()
-
-    cmd = Composer.composer()
-
-    PIPE = subprocess.PIPE
-    p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
-    print(p.stderr.read())
+    Runner.rsync_runner()
