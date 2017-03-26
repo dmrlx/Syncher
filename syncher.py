@@ -1,12 +1,8 @@
-"""
-Add module inf
-"""
-
 import re
+import os
 import sys
 import platform
 import subprocess
-
 
 # Class-receiver
 class ArgsReceiver(object):
@@ -19,127 +15,134 @@ class ArgsReceiver(object):
 class ParserResults(object):
     cli = ""        # Params
     password = ""   # Password
-    files = ""      # Sincable files and folders
+    dirs_and_files = ""      # Sincable files and folders
     user = ""       # User name
     port = ""       # Port (if needed)
     host = ""       # Host name
     dist = ""       # Distenation folder
 
 
-# Parser class
 class Parser(object):
-    class Rsync_options():
+    @staticmethod
+    def check_for_match(pattern, some_list):
+        match_list = []
+        for element in some_list:
+            match = re.match(pattern, element)
+            if match:
+                match_list.append(element)
+        return " ".join(match_list)
+
+    class Options:
         @staticmethod
         def parser(some_list):
-            options_pattern = r'^(-\w+|--[\w\-\=]+[\w\d\/\.\_]+)'
+            options_pattern = r'(^-\w+|^--[\w\-\=]+[\w\d\/\.\_]+|^[\'"].+[\'"]$)'
             password_pattern = r'-pass=.+'
             options = Parser.check_for_match(options_pattern, some_list)
             password = Parser.check_for_match(password_pattern, some_list)
             return options.replace(password, '')
 
-    # Password parser
     class Password:
         @staticmethod
         def parser(some_list):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
-    class LocalDirectory:
+    class DirsAndFiles:
         @staticmethod
         def parser(some_list):
-            pattern = r'^/.+'
-            return Parser.check_for_match(pattern, some_list)
-
-    # Files have no digits in extentions
-    class Files:
-        @staticmethod
-        def parser(some_list):
-            pattern = r'^[^-\/]{1,2}.+\D+$'
+            pattern = r'^[^-\'"].+'
             found = Parser.check_for_match(pattern, some_list)
             remote_stuff = Parser.remote_stuff(some_list)
             return found.replace(remote_stuff, '')
 
-    # User parser
-    class Remote_user:
-        @staticmethod
-        def parser(some_list):
-            pattern = r'^\w+[^\:\.\,]*'
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            user = re.match(pattern, remote_stuff[0])
-            if user or user is not None:
-                return user.group(0)
-            return ''
-
-    # Remote port parser
-    class Remote_port:
-        @staticmethod
-        def parser(some_list):
-            user = Parser.Remote_user.parser(some_list)
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            port = remote_stuff[0].lstrip(user)
-            if port or port is not None:
-                port = port.lstrip(':,.')
-            return port
-
-    # Host may be ip-like (i think)
-    class Remote_host:
-        @staticmethod
-        def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            if len(remote_stuff) > 1:
-                host_plus_dir = remote_stuff[1].split(':')
-                return host_plus_dir[0]
-            return ''
-
-    # Remote directory parser
-    class Remote_directory:
-        @staticmethod
-        def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list).split('@')
-            if len(remote_stuff) > 1:
-                host_plus_dir = remote_stuff[1].split(':')
-                if len(host_plus_dir) > 1:
-                    return host_plus_dir[1]
-            return ''
-
-    # Can be no user nor host at all (checked)
+# Can be no user nor host at all
     @staticmethod
     def remote_stuff(some_list):
-        pattern = r'^.*@.*'
+        pattern_full = r'^.+@.+'
+        pattern_host = r'^.+:.*'
         for element in some_list:
-            remote = re.match(pattern, element)
-            if remote or remote is not None:
+            remote_full = re.match(pattern_full, element)
+            remote_host = re.match(pattern_host, element)
+            if remote_full:
+                return element
+            elif remote_host:
                 return element
         return ''
 
-    @staticmethod
-    def check_for_match(pattern, some_list):
-        match_list = []
-        for element in some_list:
-            match = re.match(pattern, element)
-            if match or match is not None:
-                match_list.append(element)
-        return " ".join(match_list)
+    class RemoteUser:
+        @staticmethod
+        def parser(some_list):
+            pattern = r'^\w+[^\:\.\,\@]*'
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                user = re.match(pattern, remote_stuff)
+
+                if user:
+                    return user.group(0)
+            return ''
+
+    class RemotePort:
+        @staticmethod
+        def parser(some_list):
+            user = Parser.RemoteUser.parser(some_list)
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                remote_stuff = remote_stuff.split('@')
+                port = remote_stuff[0].lstrip(user)
+                if port:
+                    port = port.lstrip(':,.')
+                    return port
+            return ''
+
+# Host may be ip-like
+    class RemoteHost:
+        @staticmethod
+        def parser(some_list):
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                host_plus_dir = remote_stuff.split('@')[1].split(':')
+                return host_plus_dir[0]
+            else:
+                host_plus_dir = remote_stuff.split(':')
+                return host_plus_dir[0]
+
+    class RemoteDirectory:
+        @staticmethod
+        def parser(some_list):
+            remote_stuff = Parser.remote_stuff(some_list)
+            if '@' in remote_stuff:
+                host_plus_dir = remote_stuff.split('@')[1].split(':')
+                if len(host_plus_dir) > 1:
+                    return host_plus_dir[1]
+            else:
+                host_plus_dir = remote_stuff.split(':')
+                if len(host_plus_dir) > 1:
+                    return host_plus_dir[1]
+                return ''
 
 
 # Class which update global vars
-class Throw_in(object):
+class ThrowIn(object):
     @staticmethod
     def parser_results():
-        ParserResults.cli = Parser.Rsync_options.parser(ArgsReceiver.receiver())
+        ParserResults.cli = Parser.Options.parser(ArgsReceiver.receiver())
+        print("cli: {}".format(ParserResults.cli))
         ParserResults.password = Parser.Password.parser(ArgsReceiver.receiver())
-        ParserResults.loc = Parser.LocalDirectory.parser(ArgsReceiver.receiver())
-        ParserResults.files = Parser.Files.parser(ArgsReceiver.receiver())
-        ParserResults.user = Parser.Remote_user.parser(ArgsReceiver.receiver())
-        ParserResults.port = Parser.Remote_port.parser(ArgsReceiver.receiver())
-        ParserResults.host = Parser.Remote_host.parser(ArgsReceiver.receiver())
-        ParserResults.dist = Parser.Remote_directory.parser(ArgsReceiver.receiver())
+        print("password: {}".format(ParserResults.password))
+        ParserResults.dirs_and_files = Parser.DirsAndFiles.parser(ArgsReceiver.receiver())
+        print("dirs and files: {}".format(ParserResults.dirs_and_files))
+        ParserResults.user = Parser.RemoteUser.parser(ArgsReceiver.receiver())
+        print("user: {}".format(ParserResults.user))
+        ParserResults.port = Parser.RemotePort.parser(ArgsReceiver.receiver())
+        print("port: {}".format(ParserResults.port))
+        ParserResults.host = Parser.RemoteHost.parser(ArgsReceiver.receiver())
+        print("host: {}".format(ParserResults.host))
+        ParserResults.dist = Parser.RemoteDirectory.parser(ArgsReceiver.receiver())
+        print("dist: {}".format(ParserResults.dist))
 
 
 # Validator class
 class ValidateParams(object):
-
-    import platform, sys, os, subprocess
 
     @staticmethod
     def Check_length(parametr, param_name):
@@ -154,7 +157,7 @@ class ValidateParams(object):
     class Source_files:
         @staticmethod
         def validator():
-            return ValidateParams.Check_length(ParserResults.loc + ParserResults.files, "files")
+            return ValidateParams.Check_length(ParserResults.dirs_and_files, "files")
 
     class Username:
         @staticmethod
@@ -212,8 +215,9 @@ class Composer(object):
         else:
             cli_param = ""
 
-        if ParserResults.files:
-            files_param = ParserResults.files + " "
+        if ParserResults.dirs_and_files:
+            files_param = ParserResults.dirs_and_files + " "
+            cli_param += " -r "
         else:
             files_param = ""
 
@@ -222,15 +226,14 @@ class Composer(object):
         else:
             dist_param = ""
 
-        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
+        print(cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param)
+        return cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
 class Runner(object):
     @staticmethod
     def rsync_runner():
         ValidateParams.do_validator()
         cmd = Composer.composer()
-        print(cmd)
-        print(ParserResults.loc)
         PIPE = subprocess.PIPE
         p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
 
@@ -238,7 +241,7 @@ class Runner(object):
 def interface(cli=None, password=None, files=None, user=None, port=None, host=None, dist=None):
     ParserResults.cli = cli
     ParserResults.password = password
-    ParserResults.files = files
+    ParserResults.dirs_and_files = files
     ParserResults.user = user
     ParserResults.port = port
     ParserResults.host = host
@@ -247,5 +250,5 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
 
 if __name__ == "__main__":
     # Run filling of vars
-    Throw_in.parser_results()
+    ThrowIn.parser_results()
     Runner.rsync_runner()
