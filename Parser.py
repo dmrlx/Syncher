@@ -81,7 +81,6 @@ class Parser(object):
             remote_stuff = Parser.remote_stuff(some_list)
             if '@' in remote_stuff:
                 user = re.match(pattern, remote_stuff)
-                print(user)
                 if user:
                     return user.group(0)
             return ''
