@@ -146,16 +146,16 @@ class ThrowIn(object):
 # Validator class
 class ValidateParams(object):
     @staticmethod
-    def Check_length(parametr, param_name):
+    def check_length(parameter, param_name):
         magic_number = 777
         try:
-            magic_number / len(parametr)
-            return parametr
+            magic_number / len(parameter)
+            return parameter
         except:
             print('Unfortunately, you forgot define {}!\nFormat rsync function : rsync [OPTION] ... SRC ... [USER@] HOST:DEST \nPlease, try again'.format(param_name))
             sys.exit(1)
 
-    class Source_files:
+    class SourceFiles:
         @staticmethod
         def validator():
             return ValidateParams.Check_length(ParserResults.dirs_and_files, "files")
@@ -165,13 +165,13 @@ class ValidateParams(object):
         def validator():
             return ValidateParams.Check_length(ParserResults.user, "user")
 
-    class Remote_host:
+    class RemoteHost:
         @staticmethod
         def validator():
             return ValidateParams.Check_length(ParserResults.host, "host")
 
     @staticmethod
-    def Check_local_os_version():   # Check local OS
+    def check_local_os_version():   # Check local OS
         if platform.system() == "Linux":
             ValidateParams.Check_exists()   #Check does exist rsync on local machine
         else:
@@ -179,7 +179,7 @@ class ValidateParams(object):
             sys.exit(1)
 
     @staticmethod
-    def Check_exists(): #Check does exist rsync on local machine
+    def check_exists(): #Check does exist rsync on local machine
         if subprocess.call('which rsync > /dev/null', shell=True) == 0:
             pass
         else:
@@ -187,7 +187,7 @@ class ValidateParams(object):
             ValidateParams.Install_rsync()  #Install rsync on local machine
 
     @staticmethod
-    def Install_rsync():    #Install rsync on local machine
+    def install_rsync():    #Install rsync on local machine
         try:
             subprocess.call('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null', shell=True)
             print("Rsync was successfully installed!")
