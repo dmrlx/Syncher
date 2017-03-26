@@ -5,8 +5,8 @@ import sys
 class ArgsReceiver:
     @staticmethod
     def receiver():
-        first_list = ['-a', '-av', '-e', "'ssh -P -i'", "'-e ssh -P -i'", '--pass-file=/take.here',
-                      "-pass='111'", '/usr', '/usr/', '45.123', 'qwer.ty', 'e.t', 'word*',
+        first_list = ['-a', "'ssh -P -i'", "'-e ssh -P -i'", '--pass-file=/take.here',
+                      "-pass='111'", './123', './1*', '/usr', '/usr/word*', '45.123', 'qwer.ty', 'e.t',
                       'user.13@host:/usr']
         some_list = ['-t', '*.c', 'foo:/ps', "'-e ssh -P -i'"]
         return first_list
@@ -15,8 +15,7 @@ class ArgsReceiver:
 class ParserResults(object):
     cli = ""
     password = ""
-    loc = ""
-    files = ""
+    dirs_and_files = ""
     user = ""
     port = ""
     host = ""
@@ -51,19 +50,11 @@ class Parser(object):
             pattern = r'-pass=.+'
             return Parser.check_for_match(pattern, some_list)
 
-    class LocalDirectory:
+    class DirsAndFiles:
 
         @staticmethod
         def parser(some_list):
-            pattern = r'^/.+'
-            return Parser.check_for_match(pattern, some_list)
-
-# Files have no digits in extentions
-    class Files:
-
-        @staticmethod
-        def parser(some_list):
-            pattern = r'^[^-/\'"]{1,2}.+\D+$'
+            pattern = r'^[^-\'"].+'
             found = Parser.check_for_match(pattern, some_list)
             remote_stuff = Parser.remote_stuff(some_list)
             return found.replace(remote_stuff, '')
@@ -143,8 +134,7 @@ class ThrowIn(object):
     def parser_results():
         ParserResults.cli = Parser.Options.parser(ArgsReceiver.receiver())
         ParserResults.password = Parser.Password.parser(ArgsReceiver.receiver())
-        ParserResults.loc = Parser.LocalDirectory.parser(ArgsReceiver.receiver())
-        ParserResults.files = Parser.Files.parser(ArgsReceiver.receiver())
+        ParserResults.dirs_and_files = Parser.DirsAndFiles.parser(ArgsReceiver.receiver())
         ParserResults.user = Parser.RemoteUser.parser(ArgsReceiver.receiver())
         ParserResults.port = Parser.RemotePort.parser(ArgsReceiver.receiver())
         ParserResults.host = Parser.RemoteHost.parser(ArgsReceiver.receiver())
@@ -155,8 +145,7 @@ ThrowIn.parser_results()
 print(sys.version)
 print('options:{}'.format(ParserResults.cli))
 print('password:{}'.format(ParserResults.password))
-print('loc_dir:{}'.format(ParserResults.loc))
-print('files:{}'.format(ParserResults.files))
+print('dir\'s & files :{}'.format(ParserResults.dirs_and_files))
 print('user:{}'.format(ParserResults.user))
 print('port:{}'.format(ParserResults.port))
 print('host:{}'.format(ParserResults.host))
