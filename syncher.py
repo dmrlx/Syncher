@@ -229,21 +229,21 @@ class Composer(object):
 
         if ParserResults.dirs_and_files:
             dirs_and_files_param = ParserResults.dirs_and_files + " "
-            cli_param += " -r "
+            cli_param += "-r "
         else:
             dirs_and_files_param = ""
 
         if ParserResults.dist:
-            dist_param = ":" + ParserResults.dist
+            dist_param = ParserResults.dist
         else:
-            dist_param = ":"
+            dist_param = ""
 
         if ParserResults.pass_file:
             pass_file_param = ParserResults.pass_file + " "
         else:
             pass_file_param = ""
 
-        return cmd + cli_param + ssh_param + dirs_and_files_param + pass_file_param + ParserResults.user + "@" + ParserResults.host + dist_param
+        return cmd + cli_param + ssh_param + dirs_and_files_param + pass_file_param + ParserResults.user + "@" + ParserResults.host + ":" + dist_param
 
 
 class Runner(object):
