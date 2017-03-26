@@ -191,7 +191,7 @@ class ValidateParams(object):
             subprocess.call('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null', shell=True)
             print("Rsync was successfully installed!")
         except:
-            print("OOps..! Rsync wasn't installed on your machine! Please, check machine's configuration and try again!")    
+            print("OOps..! Rsync wasn't installed on your machine! Please, check machine's configuration and try again!")
 
     @staticmethod
     def do_validator():
@@ -224,7 +224,7 @@ class Composer(object):
         if ParserResults.dist:
             dist_param = ":" + ParserResults.dist
         else:
-            dist_param = ""
+            dist_param = ":"
 
         print(cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param)
         return cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
