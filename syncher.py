@@ -208,8 +208,7 @@ class PasswordFile(object):
         if ParserResults.pass_file:
             pass_file_name = "sshpass"
             f = open(pass_file_name, "w")
-            f.write(ParserResults.user + "\n")
-            f.write(ParserResults.password +"\n")
+            f.write(ParserResults.password)
             f.close
 
 
