@@ -158,22 +158,22 @@ class ValidateParams(object):
     class SourceFiles:
         @staticmethod
         def validator():
-            return ValidateParams.Check_length(ParserResults.dirs_and_files, "files")
+            return ValidateParams.check_length(ParserResults.dirs_and_files, "files")
 
     class Username:
         @staticmethod
         def validator():
-            return ValidateParams.Check_length(ParserResults.user, "user")
+            return ValidateParams.check_length(ParserResults.user, "user")
 
     class RemoteHost:
         @staticmethod
         def validator():
-            return ValidateParams.Check_length(ParserResults.host, "host")
+            return ValidateParams.check_length(ParserResults.host, "host")
 
     @staticmethod
     def check_local_os_version():   # Check local OS
         if platform.system() == "Linux":
-            ValidateParams.Check_exists()   #Check does exist rsync on local machine
+            ValidateParams.check_exists()   #Check does exist rsync on local machine
         else:
             print('Unfortunately, your OS is {}! Rsync works only with Unix-like systems.'.format(platform.system()))
             sys.exit(1)
@@ -184,7 +184,7 @@ class ValidateParams(object):
             pass
         else:
             print("Unfortunately, rsync doesn't exist on your machine! Let's install it!")
-            ValidateParams.Install_rsync()  #Install rsync on local machine
+            ValidateParams.install_rsync()  #Install rsync on local machine
 
     @staticmethod
     def install_rsync():    #Install rsync on local machine
@@ -196,10 +196,10 @@ class ValidateParams(object):
 
     @staticmethod
     def do_validator():
-        ValidateParams.Source_files.validator()
+        ValidateParams.SourceFiles.validator()
         ValidateParams.Username.validator()
-        ValidateParams.Remote_host.validator()
-        ValidateParams.Check_local_os_version()
+        ValidateParams.RemoteHost.validator()
+        ValidateParams.check_local_os_version()
 
 
 # Add password file name
