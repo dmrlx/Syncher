@@ -249,6 +249,7 @@ class Composer(object):
 class Runner(object):
     @staticmethod
     def rsync_runner():
+        PasswordFile.password_file_filler()
         ValidateParams.do_validator()
         cmd = Composer.composer()
         PIPE = subprocess.PIPE
@@ -264,11 +265,9 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.port = port
     ParserResults.host = host
     ParserResults.dist = dist
-    PasswordFile.password_file_filler()
     Runner.rsync_runner()
 
 if __name__ == "__main__":
     # Run filling of vars
     ThrowIn.parser_results()
-    PasswordFile.password_file_filler()
     Runner.rsync_runner()
