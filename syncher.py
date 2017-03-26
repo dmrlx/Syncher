@@ -4,6 +4,7 @@ import sys
 import platform
 import subprocess
 
+
 # Class-receiver
 class ArgsReceiver(object):
     @staticmethod
@@ -144,7 +145,6 @@ class ThrowIn(object):
 
 # Validator class
 class ValidateParams(object):
-
     @staticmethod
     def Check_length(parametr, param_name):
         magic_number = 777
@@ -201,6 +201,7 @@ class ValidateParams(object):
         ValidateParams.Remote_host.validator()
         ValidateParams.Check_local_os_version()
 
+
 # Add password file name
 class PasswordFile(object):
     @staticmethod
@@ -244,6 +245,7 @@ class Composer(object):
 
         return cmd + cli_param + ssh_param + files_param + pass_file_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
+
 class Runner(object):
     @staticmethod
     def rsync_runner():
@@ -251,6 +253,7 @@ class Runner(object):
         cmd = Composer.composer()
         PIPE = subprocess.PIPE
         p = subprocess.Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=subprocess.STDOUT, close_fds=True)
+
 
 #Interface function
 def interface(cli=None, password=None, files=None, user=None, port=None, host=None, dist=None):
