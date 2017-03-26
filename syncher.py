@@ -13,13 +13,14 @@ class ArgsReceiver(object):
 
 # Class of global vars
 class ParserResults(object):
-    cli = ""        # Params
-    password = ""   # Password
-    dirs_and_files = ""      # Sincable files and folders
-    user = ""       # User name
-    port = ""       # Port (if needed)
-    host = ""       # Host name
-    dist = ""       # Distenation folder
+    cli = ""                # Params
+    password = ""           # Password
+    dirs_and_files = ""     # Sincable files and folders
+    user = ""               # User name
+    port = ""               # Port (if needed)
+    host = ""               # Host name
+    dist = ""               # Distenation folder
+    pass_file = ""          # Password file
 
 
 class Parser(object):
@@ -200,6 +201,17 @@ class ValidateParams(object):
         ValidateParams.Remote_host.validator()
         ValidateParams.Check_local_os_version()
 
+# Add password file name
+class PasswordFile(object):
+    @staticmethod
+    def password_file_filler():
+        if ParserResults.pass_file:
+            pass_file_name = "sshpass"
+            f = open(pass_file_name, "w")
+            f.write(ParserResults.user + "\n")
+            f.write(ParserResults.password +"\n")
+            f.close
+
 
 class Composer(object):
     @staticmethod
@@ -225,8 +237,13 @@ class Composer(object):
             dist_param = ":" + ParserResults.dist
         else:
             dist_param = ":"
+        
+        if ParserResults.pass_file:
+            pass_file_param = ParserResults.pass_file + " "
+        else:
+            pass_file_param = ""
 
-        return cmd + cli_param + ssh_param + files_param + ParserResults.user + "@" + ParserResults.host + dist_param
+        return cmd + cli_param + ssh_param + files_param + pass_file_param + ParserResults.user + "@" + ParserResults.host + dist_param
 
 class Runner(object):
     @staticmethod
@@ -245,9 +262,11 @@ def interface(cli=None, password=None, files=None, user=None, port=None, host=No
     ParserResults.port = port
     ParserResults.host = host
     ParserResults.dist = dist
+    PasswordFile.password_file_filler()
     Runner.rsync_runner()
 
 if __name__ == "__main__":
     # Run filling of vars
     ThrowIn.parser_results()
+    PasswordFile.password_file_filler()
     Runner.rsync_runner()
