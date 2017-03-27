@@ -1,5 +1,4 @@
 import re
-import os
 import sys
 import platform
 import subprocess
@@ -151,7 +150,7 @@ class ValidateParams(object):
         try:
             magic_number / len(parameter)
             return parameter
-        except:
+        except ZeroDivisionError:
             print('Unfortunately, you forgot define {}!\nFormat rsync function : rsync [OPTION] ... SRC ... [USER@] HOST:DEST \nPlease, try again'.format(param_name))
             sys.exit(1)
 
