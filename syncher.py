@@ -206,11 +206,11 @@ class ValidateParams(object):
 class PasswordFile(object):
     @staticmethod
     def password_file_filler():
-        if ParserResults.pass_file:
-            pass_file_name = "sshpass"
-            f = open(pass_file_name, "w")
+        if ParserResults.password:
+            ParserResults.pass_file = "sshpass.txt"
+            f = open(ParserResults.pass_file, "w")
             f.write(ParserResults.password)
-            f.close
+            f.close()
 
 
 class Composer(object):
@@ -239,7 +239,7 @@ class Composer(object):
             dist_param = ""
 
         if ParserResults.pass_file:
-            pass_file_param = ParserResults.pass_file + " "
+            pass_file_param = "--password-file={} ".format(ParserResults.pass_file)
         else:
             pass_file_param = ""
 
