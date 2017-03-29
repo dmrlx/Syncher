@@ -127,7 +127,7 @@ class Parser(object):
                     return host_plus_dir[1]
                 return ''
 
-
+"""
 class ThrowIn(object):
 
     @staticmethod
@@ -139,8 +139,8 @@ class ThrowIn(object):
         ParserResults.port = Parser.RemotePort.parser(ArgsReceiver.receiver())
         ParserResults.host = Parser.RemoteHost.parser(ArgsReceiver.receiver())
         ParserResults.dist = Parser.RemoteDirectory.parser(ArgsReceiver.receiver())
-
-
+"""
+"""
 ThrowIn.parser_results()
 print(sys.version)
 print('options:{}'.format(ParserResults.cli))
@@ -150,3 +150,4 @@ print('user:{}'.format(ParserResults.user))
 print('port:{}'.format(ParserResults.port))
 print('host:{}'.format(ParserResults.host))
 print('dist_dir:{}'.format(ParserResults.dist))
+"""
