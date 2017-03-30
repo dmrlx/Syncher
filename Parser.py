@@ -118,7 +118,6 @@ class Parser(object):
                 return host_plus_dir[1]
             return ''
 
-
 Parser.execute()
 print('options:{}'.format(ParserResults.cli))
 print('password:{}'.format(ParserResults.password))
