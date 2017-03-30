@@ -3,123 +3,17 @@ import sys
 import platform
 import subprocess
 
+import receiver
+import parser
+import validator
+import composer
+
 
 # Class-receiver
 class ArgsReceiver(object):
     @staticmethod
     def receiver():
         return sys.argv[1:]
-
-
-# Class of global vars
-class ParserResults(object):
-    cli = ""                # Params
-    password = ""           # Password
-    dirs_and_files = ""     # Sincable files and folders
-    user = ""               # User name
-    port = ""               # Port (if needed)
-    host = ""               # Host name
-    dist = ""               # Distenation folder
-    pass_file = ""          # Password file
-
-
-class Parser(object):
-    @staticmethod
-    def check_for_match(pattern, some_list):
-        match_list = []
-        for element in some_list:
-            match = re.match(pattern, element)
-            if match:
-                match_list.append(element)
-        return " ".join(match_list)
-
-    class Options:
-        @staticmethod
-        def parser(some_list):
-            options_pattern = r'(^-\w+|^--[\w\-\=]+[\w\d\/\.\_]+|^[\'"].+[\'"]$)'
-            password_pattern = r'-pass=.+'
-            options = Parser.check_for_match(options_pattern, some_list)
-            password = Parser.check_for_match(password_pattern, some_list)
-            return options.replace(password, '')
-
-    class Password:
-        @staticmethod
-        def parser(some_list):
-            pattern = r'-pass=.+'
-            return Parser.check_for_match(pattern, some_list)
-
-    class DirsAndFiles:
-        @staticmethod
-        def parser(some_list):
-            pattern = r'^[^-\'"].+'
-            found = Parser.check_for_match(pattern, some_list)
-            remote_stuff = Parser.remote_stuff(some_list)
-            return found.replace(remote_stuff, '')
-
-# Can be no user nor host at all
-    @staticmethod
-    def remote_stuff(some_list):
-        pattern_full = r'^.+@.+'
-        pattern_host = r'^.+:.*'
-        for element in some_list:
-            remote_full = re.match(pattern_full, element)
-            remote_host = re.match(pattern_host, element)
-            if remote_full:
-                return element
-            elif remote_host:
-                return element
-        return ''
-
-    class RemoteUser:
-        @staticmethod
-        def parser(some_list):
-            pattern = r'^\w+[^\:\.\,\@]*'
-            remote_stuff = Parser.remote_stuff(some_list)
-            if '@' in remote_stuff:
-                user = re.match(pattern, remote_stuff)
-
-                if user:
-                    return user.group(0)
-            return ''
-
-    class RemotePort:
-        @staticmethod
-        def parser(some_list):
-            user = Parser.RemoteUser.parser(some_list)
-            remote_stuff = Parser.remote_stuff(some_list)
-            if '@' in remote_stuff:
-                remote_stuff = remote_stuff.split('@')
-                port = remote_stuff[0].lstrip(user)
-                if port:
-                    port = port.lstrip(':,.')
-                    return port
-            return ''
-
-# Host may be ip-like
-    class RemoteHost:
-        @staticmethod
-        def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list)
-            if '@' in remote_stuff:
-                host_plus_dir = remote_stuff.split('@')[1].split(':')
-                return host_plus_dir[0]
-            else:
-                host_plus_dir = remote_stuff.split(':')
-                return host_plus_dir[0]
-
-    class RemoteDirectory:
-        @staticmethod
-        def parser(some_list):
-            remote_stuff = Parser.remote_stuff(some_list)
-            if '@' in remote_stuff:
-                host_plus_dir = remote_stuff.split('@')[1].split(':')
-                if len(host_plus_dir) > 1:
-                    return host_plus_dir[1]
-            else:
-                host_plus_dir = remote_stuff.split(':')
-                if len(host_plus_dir) > 1:
-                    return host_plus_dir[1]
-                return ''
 
 
 # Class which update global vars
