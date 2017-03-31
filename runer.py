@@ -8,6 +8,29 @@ import parser
 import validator
 import composer
 
+# Ниже то, что (насколько я понял) хочет получить Артём. Максимально абстрагированные от конкретных задач, универсальные методы.
+
+class Nishtjaki():
+    def pinger(ip, attempts="1000"):
+        while i < attempts:
+            if ping(ip): # Если пингуется
+                return True # Завершаем и возвращаем True
+            else:
+                i += 1 # Запускаем новую итерацию
+
+
+    def is_host_available(ip): # Фактически свойство данного айпишника, доступность.
+        if pinger(ip):
+            return True
+        else:
+            return False
+
+
+    def pusher(ip, cmd): # Пушер. Получает в переменные на какой ip какую команду отправить
+        if is_host_available(ip): # Проверяет доступность хоста
+            subprocess.Popen(cmd)
+            # Здесь нужен блок получения stdout и stderr и ретурна, нужно подумать
+
 
 # class Runner(object):
 #     @staticmethod
