@@ -5,10 +5,10 @@ import sys
 import platform
 import subprocess
 
-import receiver
-import parser
-import validator
-import composer
+# import receiver
+# import parser
+# import validator
+# import composer
 
 # Генератор ping'a
 # Пингует по умолчанию 1 раз. Можно увеличить таймер, но всё равно тригернётся на первый же ответ.
@@ -21,8 +21,8 @@ def ping_cmd_generator(host, timer=1):
 def pusher(cmd):
     cmd = cmd.split()
     push = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = push.stdout.read().decode()
-    error = push.stderr.read().decode()
+    # output = push.stdout.read().decode()
+    # error = push.stderr.read().decode()
     push.wait()
     return push.poll()
 
