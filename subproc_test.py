@@ -18,6 +18,4 @@ def pusher(cmd):
     return push.poll()
 
 if __name__ == "__main__":
-    pusher(ping_cmd_generator("192.168.56.102"))
-
-
+    pusher(ping_cmd_generator("192.168.56.102")) # Тут айпишник для примера, потом будет браться из переменных
