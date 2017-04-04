@@ -18,12 +18,13 @@ def transfer(username, hostname, password):
         path_to_keys = stdout.read().decode()
     # print(path_to_keys)
 
+"""   У Полины кошерней
     # Генерим паблик ключ для мёрджа на удаленном хосте
     for k, v in client.get_host_keys().values()[0].items():
         pub_key = '{} {} {}@{}'.format(k, v.get_base64(), gethostname(), gethostbyname(gethostname()))
         # print(pub_key)
         break
-
+"""
     # Добавляем наш ключ к списку ключей на удаленном хосте
     client.exec_command("echo \'{}\' >> {}".format(pub_key, path_to_keys))
 
