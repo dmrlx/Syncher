@@ -19,13 +19,13 @@ def install_remote_rsync(): #Install rsync on remote machine
         print("OOps..! Rsync wasn't installed on remote machine! Please, check machine's configuration and try again!")
         sys.exit(1)
         
-def remote_mkdir(a):    #Make remote directory
+def remote_mkdir(need_dir):    #Make remote directory
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(syncherVariables.host, password=syncherVariables.password, username=syncherVariables.user)
-        stdin, stdout, stderr = ssh.exec_command("mkdir -p {}".format(a))
-        print("{} was successfully created!".format(a))
+        stdin, stdout, stderr = ssh.exec_command("mkdir -p {}".format(need_dir))
+        print("{} was successfully created!".format(need_dir))
     except:
         print("Unfortunately, remote directory wasn't created! Please,try again later")
         sys.exit(1)
