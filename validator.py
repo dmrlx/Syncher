@@ -98,11 +98,10 @@ class RemoteCheck(object):
  
     @staticmethod
     def check_remote_dir_exists():  #Check if remote directory exists
+        b=(syncherVariables.dirs).split("/")
         if '*' in dir:
-            b=(syncherVariables.dirs).split("/")
             c = "/".join(b[2:-1])
         else:
-            b = (syncherVariables.dirs).split("/")
             c = "/".join(b[2:])
         need_dir=expanduser('~')+'/'+c
         ssh = paramiko.SSHClient()
