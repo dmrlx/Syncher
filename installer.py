@@ -32,7 +32,8 @@ def remote_mkdir(a):    #Make remote directory
  
 def generate_keys():    #Generate SSH keys
     try:
-        subprocess.call('ssh-keygen -t rsa -N "" -f {} > /dev/null'.format(expanduser('~')+'/.ssh/id_rsa'), shell=True)
+        pub_keys_path="expanduser('~')+'/.ssh/id_rsa'"
+        subprocess.call('ssh-keygen -t rsa -N "" -f {} > /dev/null'.format(pub_keys_path), shell=True)
         print("SSH keys were successfully generated!")
     except:
         print("Unfortunately, SSH keys weren't generated, please, try again later")
