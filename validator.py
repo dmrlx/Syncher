@@ -14,17 +14,17 @@ class ValidateParams(object):
             sys.exit(1)
             #return False
 
-    class Source_files:
+    class SourceFiles(object):
         @staticmethod
         def validator():
             return ValidateParams.check_length(syncherVariables.dirs + syncherVariables.files, "files")
 
-    class Username:
+    class Username(object):
         @staticmethod
         def validator():
             return ValidateParams.check_length(syncherVariables.user, "user")
 
-    class Remote_host:
+    class RemoteHost(object):
         @staticmethod
         def validator():
             return ValidateParams.check_length(syncherVariables.host, "host")
@@ -68,7 +68,7 @@ class ValidateParams(object):
 
 #ValidateParams.do_validator()
 
-class Remote_check(object):
+class RemoteCheck(object):
 
     @staticmethod
     def check_passwordless_access():#Check passwordless access with remote host
@@ -96,7 +96,7 @@ class Remote_check(object):
             installer.install_remote_rsync()    #Install rsync on remote machine
             #return False
  
-     @staticmethod
+    @staticmethod
     def check_remote_dir_exists():  #Check if remote directory exists
         if '*' in dir:
             b=(syncherVariables.dirs).split("/")
@@ -104,18 +104,18 @@ class Remote_check(object):
         else:
             b = (syncherVariables.dirs).split("/")
             c = "/".join(b[2:])
-        a=expanduser('~')+'/'+c
+        need_dir=expanduser('~')+'/'+c
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(syncherVariables.host, password=syncherVariables.password, username=syncherVariables.user)
-        stdin, stdout, stderr = ssh.exec_command("find {} ".format(a))
+        stdin, stdout, stderr = ssh.exec_command("find {} ".format(need_dir))
         output=stdout.readlines()
         if len(output) != 0:
             print("Directory {} exists on remote machine".format(syncherVariables.dirs))
             #return True
         else:
             print("Directory {} doesn't exist on remote host!".format(syncherVariables.dirs))
-            installer.remote_mkdir(a)  #Make remote directory
+            installer.remote_mkdir(need_dir)  #Make remote directory
             #return False
 
 #Remote_check.check_passwordless_access()
