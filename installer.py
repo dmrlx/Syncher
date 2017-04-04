@@ -1,0 +1,1 @@
+pub_keys_path = '~/.ssh/id_rsa'

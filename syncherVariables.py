@@ -9,6 +9,3 @@ class ParserResults(object):
     host = ""               # Host name
     dist = ""               # Distenation folder
     pass_file = ""          # Password file
-
-class CustomShell(object):
-    key_path = ""
