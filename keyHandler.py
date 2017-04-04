@@ -19,9 +19,7 @@ class Interrupt():
         elif sys.version_info.major == 3:
             take_input = input
         while True:
-
 # RuntimeError exception takes place here, due to some stranger things (tried to figure it out for too much time)...
-
             choice = take_input(frase)
             if choice.lower() == 'y':
                 sys.exit()
