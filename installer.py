@@ -1,7 +1,7 @@
 import paramiko, subprocess, os, sys
 from os.path import expanduser
 
-def install_local_rsync_rsync():    #Install rsync on local machine
+def install_local_rsync():    #Install rsync on local machine
     try:
         subprocess.call('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null', shell=True)
         print("Rsync was successfully installed!")
