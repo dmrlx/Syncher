@@ -18,4 +18,4 @@ def transfer(username, hostname, password):
     client.exec_command("cat {}.pub >> {}".format(installer.pub_keys_path, rem_path_to_keys))
 
 if __name__ == '__main__':
-    transfer('root', '192.168.222.131', 'me')
+    transfer('root', 'host', '111')
