@@ -1,11 +1,11 @@
-import subprocess
+from subprocess import check_output
 from paramiko import SSHClient, AutoAddPolicy
-import installer
+from installer import pub_keys_path
 
-def transfer(username, hostname, password, key_path):
+def key_transfer(username, hostname, password, key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
 # (сгенерирован в инсталлере)
-    local_key = subprocess.check_output('cat {}.pub'.format(key_path)).decode()
+    local_key = check_output('cat {}.pub'.format(key_path)).decode()
 # Три команды - подключаемся к удаленной машине
     remote_machine = SSHClient()
     remote_machine.set_missing_host_key_policy(AutoAddPolicy())
@@ -34,4 +34,5 @@ def key_append(machine, key, rem_path):
     machine.exec_command("echo {} >> {}".format(key, rem_path))
 
 if __name__ == '__main__':
-    transfer('root', '192.168.222.131', 'me', installer.pub_keys_path)
+# Пример вызова функции
+    key_transfer('root', '192.168.222.131', 'me', pub_keys_path)

@@ -1,7 +1,7 @@
 import re
 import os.path
-from args_receiver import ArgsReceiver
-from syncher_variables import ParserResults
+from receiver import ArgsReceiver
+from variables import ParserResults
 
 
 class Parser(object):
