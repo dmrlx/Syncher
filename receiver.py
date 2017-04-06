@@ -4,7 +4,7 @@ r""" Receiver - модуль, принимающий аргументы кома
 """
     
     
-import sys
+from sys import argv
 
 
 class ArgsReceiver(object):  # Получает аргументы от CLI
