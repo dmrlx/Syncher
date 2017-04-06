@@ -28,7 +28,7 @@ import pinger
 #     # output = push.stdout.read().decode()
 #     # error = push.stderr.read().decode()
 #     push.wait()
-#     return push.poll()
+    # return push.poll()
 
 def runer():
     parser.Parser.execute(receiver.ArgsReceiver.receiver())
@@ -43,7 +43,10 @@ def runer():
     # print(variables.ParserResults.port)
     # print(variables.ParserResults.user)
     if pinger.check_ping():
-        pass
+        print("Host is available!")
+    else:
+        print("Host is unavailable!")
+
 
 
 
