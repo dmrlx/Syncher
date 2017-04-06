@@ -8,9 +8,6 @@ import parser
 import receiver
 import variables
 import pinger
-
-# import receiver
-# import parser
 # import validator
 # import composer
 
@@ -25,29 +22,19 @@ import pinger
 # def pusher(cmd):
 #     cmd = cmd.split()
 #     push = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#     # output = push.stdout.read().decode()
-#     # error = push.stderr.read().decode()
+#     output = push.stdout.read().decode()
+#     error = push.stderr.read().decode()
 #     push.wait()
-    # return push.poll()
+#     return push.poll()
 
 def runer():
-    parser.Parser.execute(receiver.ArgsReceiver.receiver())
-    # print(variables.ParserResults.cli)
-    # print(variables.ParserResults.user)
-    # print(variables.ParserResults.dirs)
-    # print(variables.ParserResults.dist)
-    # print(variables.ParserResults.files)
-    # print(variables.ParserResults.host)
-    # print(variables.ParserResults.pass_file)
-    # print(variables.ParserResults.password)
-    # print(variables.ParserResults.port)
+    parser.execute(receiver.ArgsReceiver.receiver(), variables.ParserResults)
     # print(variables.ParserResults.user)
     if pinger.check_ping():
         print("Host is available!")
+
     else:
         print("Host is unavailable!")
-
-
 
 
 if __name__ == "__main__":
