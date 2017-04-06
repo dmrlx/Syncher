@@ -51,6 +51,7 @@ def key_append(machine, key, rem_path):
 
 if __name__ == '__main__':
     from installer import pub_keys_path
-    
+
+
 # Пример вызова функции
     key_transfer('virtual', '192.168.56.5', 'Me', pub_keys_path)
