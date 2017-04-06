@@ -1,6 +1,5 @@
 from signal import signal, SIGINT
 from sys import version_info, exit as sys_exit
-from time import sleep
 
 def handle(function):
     try:
@@ -37,6 +36,7 @@ def redirect(signum, frame):
             continue
 
 if __name__ == "__main__":
+    from time import sleep
 
     def function():
         check = 0

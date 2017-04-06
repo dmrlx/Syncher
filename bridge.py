@@ -1,6 +1,5 @@
 from subprocess import check_output
 from paramiko import SSHClient, AutoAddPolicy
-from installer import pub_keys_path
 
 def key_transfer(username, hostname, password, key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
@@ -34,5 +33,6 @@ def key_append(machine, key, rem_path):
     machine.exec_command("echo {} >> {}".format(key, rem_path))
 
 if __name__ == '__main__':
+    from installer import pub_keys_path
 # Пример вызова функции
     key_transfer('root', '192.168.222.131', 'me', pub_keys_path)
