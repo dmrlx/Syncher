@@ -1,20 +1,25 @@
+"""
+This module contains functions for installation ssh connection with remote machine, installation
+necessary software on local/remote machine, make remote directory and generate SSH keys
+"""
+
 import paramiko
 from subprocess import call
 from os.path import expanduser
 
 class Installer(object):
 
-    @staticmethod
+    @staticmethod   # Install ssh connection with remote machine
     def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
-      def wrapper():
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host, password=password, username=username)
-        function(ssh=ssh)
-        ssh.close()
-      return wrapper
+        def wrapper():
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(host, password=password, username=username)
+            function(ssh=ssh)
+            ssh.close()
+        return wrapper
 
-
+    @staticmethod
     def install_local_need_soft(need_soft='rsync'):  # Install rsync on local machine
         try:
             call('apt-get install -y {} > /dev/null || yum install -y {} > /dev/null'.format(need_soft, need_soft), shell=True)
