@@ -1,14 +1,13 @@
-import re
-import os.path
-from args_receiver import ArgsReceiver
-from syncher_variables import ParserResults
+from re import match as re_match
+from os.path import isdir as path_isdir, isfile as path_isfile
+from receiver import ArgsReceiver
+from variables import ParserResults
 
 
 class Parser(object):
 
     @staticmethod
-    def execute():
-        args = ArgsReceiver.receiver()
+    def execute(args):
         ParserResults.cli = Parser.options_parse(args)
         ParserResults.password = Parser.password_parse(args)
         ParserResults.dirs = Parser.dirs_parse(args)
@@ -22,7 +21,7 @@ class Parser(object):
     def check_for_match(pattern, some_list):
         match_list = []
         for element in some_list:
-            match = re.match(pattern, element)
+            match = re_match(pattern, element)
             if match:
                 match_list.append(element)
         return " ".join(match_list)
@@ -51,7 +50,7 @@ class Parser(object):
     def dirs_parse(some_list):
         dirs = []
         for element in Parser.pull_local_info(some_list).split():
-            if os.path.isdir(element):
+            if path_isdir(element):
                 dirs.append(element)
         return " ".join(dirs)
 
@@ -59,7 +58,7 @@ class Parser(object):
     def files_parse(some_list):
         files = []
         for element in Parser.pull_local_info(some_list).split():
-            if os.path.isfile(element):
+            if path_isfile(element):
                 files.append(element)
         return " ".join(files)
 
@@ -68,8 +67,8 @@ class Parser(object):
         pattern_full = r'^.+@.+'
         pattern_host = r'^.+:.*'
         for element in some_list:
-            remote_full = re.match(pattern_full, element)
-            remote_host = re.match(pattern_host, element)
+            remote_full = re_match(pattern_full, element)
+            remote_host = re_match(pattern_host, element)
             if remote_full:
                 return element
             elif remote_host:
@@ -81,7 +80,7 @@ class Parser(object):
         pattern = r'^\w+[^\:\.\,\@]*'
         remote_info = Parser.pull_remote_info(some_list)
         if '@' in remote_info:
-            user = re.match(pattern, remote_info)
+            user = re_match(pattern, remote_info)
             if user:
                 return user.group()
         return ''
@@ -123,7 +122,8 @@ class Parser(object):
 
 
 if __name__ == "__main__":
-    Parser.execute()
+# Пример вызова функции
+    Parser.execute(ArgsReceiver.receiver())
     for attr in ['cli', 'password', 'dirs', 'files', 'user', 'port', 'host', 'dist']:
         print('{}: '.format(attr), end='')
         eval('print(ParserResults.{})'.format(attr))
