@@ -1,7 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+r""" Receiver - модуль, принимающий аргументы командной строки.
+     Функция receiver передает список аргументов командной строки.
+"""
 
-import sys
+from sys import argv
 
 
 class ArgsReceiver(object):  # Получает аргументы от CLI
