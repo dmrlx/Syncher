@@ -17,7 +17,3 @@ def check_ping():
         return True
     else:
         return False
-
-
-# sys.exit(0)
-
