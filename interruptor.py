@@ -1,6 +1,17 @@
+r""" Interruptor - модуль, "перехватывающий" комманду
+     прерывания выполнения (^C) переданной функции, и
+     задающий условие для дальнейшего выполнения функции.
+
+     Функция handle осуществляет "перехват" первого прерывания
+     и останавливает выполнение функции при втором прерывании.
+
+     Функция redirect задает после первого прерывания условие
+     для дальнейшего выполнения функции ("продолжить" или "остановиться").
+"""
+
 from signal import signal, SIGINT
 from sys import version_info, exit as sys_exit
-from time import sleep
+
 
 def handle(function):
     try:
@@ -36,7 +47,10 @@ def redirect(signum, frame):
         else:
             continue
 
+
 if __name__ == "__main__":
+    from time import sleep
+
 
     def function():
         check = 0
