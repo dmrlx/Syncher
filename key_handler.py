@@ -1,5 +1,8 @@
+import signal
+import sys
+from time import sleep
+
 def interrupt(function):
-    import signal
     try:
 # Тут с помощью модуля signal делается перехватчик интеррапт-сигнала (^C),
 # дальнейшие действия определяются методом redirect
@@ -12,7 +15,6 @@ def interrupt(function):
         print('But you\'re still trying to stop it... Okay.')
 
 def redirect(signum, frame):
-    import sys
     print("\nOperation is still running. It's highly recommended to wait for it to end. ")
     frase = "\bAre you shure you want to stop it? [y/N] ) -> "
 # Поправка input-команды на версию питона
@@ -23,18 +25,18 @@ def redirect(signum, frame):
     while True:
 # RuntimeError exception takes place here, due to some stranger things (tried to figure it out for too much time)...
         choice = take_input(frase)
-# Если yes - останавливаем выполнение операции
+# Если введен y - останавливаем выполнение операции
         if choice.lower() == 'y':
             sys.exit()
-# Если no (по умолчанию) - операция выполняется дальше
+# Если введен n (по умолчанию) - операция выполняется дальше
 # (с того места, где было словлено прерывание ^C)
         elif choice.lower() == 'n' or choice == '':
             break
+# Если введен любой другой символ - просит ввести заново (идет на while)
         else:
             continue
 
 if __name__ == "__main__":
-    from time import sleep
 
     def function():
         check = 0
