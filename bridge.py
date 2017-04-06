@@ -20,7 +20,7 @@ from paramiko import SSHClient, AutoAddPolicy
 def key_transfer(username, hostname, password, key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
 # (сгенерирован в инсталлере)
-    local_key = check_output('cat {}.pub'.format(key_path)).decode()
+    local_key = check_output('cat {}.pub'.format(key_path), shell=True).decode().strip()
 # Три команды - подключаемся к удаленной машине
     remote_machine = SSHClient()
     remote_machine.set_missing_host_key_policy(AutoAddPolicy())
@@ -51,6 +51,7 @@ def key_append(machine, key, rem_path):
 
 if __name__ == '__main__':
     from installer import pub_keys_path
-    
+
+
 # Пример вызова функции
-    key_transfer('root', '192.168.222.131', 'me', pub_keys_path)
+    key_transfer('virtual', '192.168.56.5', 'Me', pub_keys_path)
