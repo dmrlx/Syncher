@@ -1,5 +1,21 @@
+r""" Bridge - модуль для "проброса ключей":
+
+     - В функции key_transfer создается соединение
+       с удаленной машиной и запускаются две остальные
+       функции - key_search и key_append.
+
+     - В функции key_search происходит поиск/создание
+       файла с паблик ключами на удаленной машине
+
+     - В функции key_append происходит добавление
+       созданного на локаьной машине паблик ключа
+       к найденному/созданному в функции key_search
+       файлу
+"""
+
 from subprocess import check_output
 from paramiko import SSHClient, AutoAddPolicy
+
 
 def key_transfer(username, hostname, password, key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
@@ -32,7 +48,9 @@ def key_append(machine, key, rem_path):
 # Добавляем паблик ключ нашей локальной машины к списку паблик ключей на удаленном хосте
     machine.exec_command("echo {} >> {}".format(key, rem_path))
 
+
 if __name__ == '__main__':
     from installer import pub_keys_path
+    
 # Пример вызова функции
     key_transfer('root', '192.168.222.131', 'me', pub_keys_path)
