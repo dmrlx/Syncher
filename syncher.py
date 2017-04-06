@@ -1,4 +1,4 @@
 import runer
 
 if __name__ == "__main__":
-runer.runer()
+    runer.runer()

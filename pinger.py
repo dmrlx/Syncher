@@ -4,6 +4,7 @@
 
 import os
 import parser
+import sys
 from variables import ParserResults
 
 def check_ping():
@@ -15,5 +16,5 @@ def check_ping():
         return False
 
 
-sys.exit(0)
+# sys.exit(0)
 
