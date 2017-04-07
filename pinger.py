@@ -6,14 +6,13 @@ r""" Pinger - модуль для проверки целостности сое
 
 
 import os
-import parser
 import sys
-from variables import ParserResults
 
-def check_ping():
-    hostname = ParserResults.host
-    response = os.system("ping -c 1 " + hostname)
+def check_ping(ip):
+    response = os.system("ping -c 1 " + ip)
     if response == 0:
         return True
     else:
         return False
+
+check_ping(ip)
