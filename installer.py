@@ -7,9 +7,11 @@ import paramiko
 from subprocess import call
 from os.path import expanduser
 
+from variables import ParserResults
+
 class Installer(object):
 
-    @staticmethod   # Install ssh connection with remote machine
+    # @staticmethod   # Install ssh connection with remote machine
     def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
         def wrapper():
             ssh = paramiko.SSHClient()
@@ -30,7 +32,7 @@ class Installer(object):
     @to_connect
     def install_remote_need_soft(ssh='ssh', need_soft='rsync'):  # Install rsync on remote machine
         try:
-            stdin, stdout, stderr = ssh.exec_command('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null')
+            stdin, stdout, stderr = ssh.exec_command('apt-get install -y {} > /dev/null || yum install -y {} > /dev/null'.format(need_soft, need_soft))
             return True
         except:
             return False
