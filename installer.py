@@ -7,9 +7,11 @@ import paramiko
 from subprocess import call
 from os.path import expanduser
 
+from variables import ParserResults
+
 class Installer(object):
 
-    @staticmethod   # Install ssh connection with remote machine
+    # @staticmethod   # Install ssh connection with remote machine
     def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
         def wrapper():
             ssh = paramiko.SSHClient()

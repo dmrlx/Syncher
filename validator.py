@@ -11,6 +11,9 @@ from platform import system
 from subprocess import call
 from os.path import expanduser
 
+from variables import ParserResults
+from installer import Installer
+
 class ValidateParams(object):
 
     @staticmethod
