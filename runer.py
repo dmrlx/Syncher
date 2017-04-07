@@ -29,28 +29,27 @@ import bridge
 #     push.wait()
 #     return push.poll()
 
+# if pusher(ping_cmd_generator("192.168.56.102")) == 1:
+#     print("Unavailable!")
+# else:
+#     print("Pinged!")
+
 def main():
-    parser.execute(receiver.ArgsReceiver.receiver(), variables.ParserResults)
+    parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
     # print(variables.ParserResults.user)
     if pinger.check_ping(): # Если пингуется машина
+
         if not validator.ValidateParams.check_exists_need_soft(): # Проверяем установлен ли SSH
-            installer.Installer.install_local_need_soft() # Устанавливаем если нет
+            print(installer.Installer.install_local_need_soft()) # Устанавливаем если нет
 
-        if not validator.ValidateParams.check_pub_keys: # Проверяем проброшены ли ключи
-            bridge.key_transfer(ParserResults.user, ParserResults.host, ParserResults.password, !!!!!!!!!!!!!!!!!!!!!!!!!!!!!) # Пробрасываем
+        # if not validator.ValidateParams.check_pub_keys: # Проверяем проброшены ли ключи
+        #     bridge.key_transfer(ParserResults.user, ParserResults.host, ParserResults.password, !!!!!!!!!!!!!!!!!!!!!!!!!!!!!) # Пробрасываем
 
-        !!!!!!SSH_CONNECT!!!!!!!
-
-
-
+        # !!!!!!SSH_CONNECT!!!!!!!
 
     else:
         print("Host is unavailable!")
 
 
 if __name__ == "__main__":
-    # if pusher(ping_cmd_generator("192.168.56.102")) == 1:
-    #     print("Unavailable!")
-    # else:
-    #     print("Pinged!")
     pass
