@@ -30,7 +30,7 @@ class Installer(object):
     @to_connect
     def install_remote_need_soft(ssh='ssh', need_soft='rsync'):  # Install rsync on remote machine
         try:
-            stdin, stdout, stderr = ssh.exec_command('apt-get install -y rsync > /dev/null || yum install -y rsync > /dev/null')
+            stdin, stdout, stderr = ssh.exec_command('apt-get install -y {} > /dev/null || yum install -y {} > /dev/null'.format(need_soft, need_soft))
             return True
         except:
             return False
