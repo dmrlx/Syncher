@@ -6,9 +6,11 @@ import platform
 import subprocess
 import parser
 import receiver
-import variables
+from variables import ParserResults
 import pinger
-# import validator
+import validator
+import installer
+import bridge
 # import composer
 
 # Генератор ping'a
@@ -27,11 +29,20 @@ import pinger
 #     push.wait()
 #     return push.poll()
 
-def runer():
+def main():
     parser.execute(receiver.ArgsReceiver.receiver(), variables.ParserResults)
     # print(variables.ParserResults.user)
-    if pinger.check_ping():
-        print("Host is available!")
+    if pinger.check_ping(): # Если пингуется машина
+        if not validator.ValidateParams.check_exists_need_soft(): # Проверяем установлен ли SSH
+            installer.Installer.install_local_need_soft() # Устанавливаем если нет
+
+        if not validator.ValidateParams.check_pub_keys: # Проверяем проброшены ли ключи
+            bridge.key_transfer(ParserResults.user, ParserResults.host, ParserResults.password, !!!!!!!!!!!!!!!!!!!!!!!!!!!!!) # Пробрасываем
+
+        !!!!!!SSH_CONNECT!!!!!!!
+
+
+
 
     else:
         print("Host is unavailable!")
