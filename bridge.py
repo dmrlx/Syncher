@@ -15,9 +15,10 @@ r""" Bridge - модуль для "проброса ключей":
 
 from subprocess import check_output
 from paramiko import SSHClient, AutoAddPolicy
+from installer import Installer
 
 
-def key_transfer(username, hostname, password, key_path):
+def key_transfer(username, hostname, password, key_path='~/.ssh/id_rsa'):
 # Записываем в переменную содержимое паблик ключа на нашей машине
 # (сгенерирован в инсталлере)
     local_key = check_output('cat {}.pub'.format(key_path), shell=True).decode().strip()
@@ -50,8 +51,5 @@ def key_append(machine, key, rem_path):
 
 
 if __name__ == '__main__':
-    from installer import pub_keys_path
-
-
 # Пример вызова функции
-    key_transfer('virtual', '192.168.56.5', 'Me', pub_keys_path)
+    key_transfer('virtual', '192.168.56.5', 'Me')
