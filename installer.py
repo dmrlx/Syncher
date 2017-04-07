@@ -6,7 +6,7 @@ class Installer(object):
 
     @property
     def pub_keys_path(self):
-        return self.__tahograph
+        return self.__pub_keys_path
 
     def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
         def wrapper(*args):
