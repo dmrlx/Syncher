@@ -1,11 +1,11 @@
 # Class of global vars
 class ParserResults(object):
     cli = ""                # Params
-    password = ""           # Password
+    password = "me"           # Password
     dirs = ""               # Sincable folders
     files = ""              # Sincable files
-    user = ""               # User name
+    user = "root"               # User name
     port = ""               # Port (if needed)
-    host = ""               # Host name
+    host = "192.168.222.131"               # Host name
     dist = ""               # Distenation folder
     pass_file = ""          # Password file
