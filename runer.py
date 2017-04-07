@@ -36,17 +36,13 @@ import bridge
 
 def main():
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
-    # print(variables.ParserResults.user)
+
     if pinger.check_ping(): # Если пингуется машина
         if not validator.ValidateParams.check_exists_need_soft(): # Проверяем установлен ли SSH
-            print(installer.Installer.install_local_need_soft()) # Устанавливаем если нет
+            installer.Installer.install_local_need_soft() # Устанавливаем если нет
 
-        # if not validator.ValidateParams.check_pub_keys: # Проверяем проброшены ли ключи
-            # bridge.key_transfer(ParserResults.user, ParserResults.host, ParserResults.password, !!!!!!!!!!!!!!!!!!!!!!!!!!!!!) # Пробрасываем
-
-
-
-        # !!!!!!SSH_CONNECT!!!!!!!
+        if not validator.ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
+            bridge.key_transfer(ParserResults.user, ParserResults.host, ParserResults.password) # Пробрасываем
 
     else:
         print("Host is unavailable!")
