@@ -24,7 +24,7 @@ class Installer(object):
     @staticmethod
     def install_local_need_soft(need_soft='rsync'):  # Install rsync on local machine
         try:
-            call('apt-get install -y {} > /dev/null || yum install -y {} > /dev/null'.format(need_soft, need_soft), shell=True)
+            call('sudo apt-get install -y {} > /dev/null || sudo yum install -y {} > /dev/null'.format(need_soft, need_soft), shell=True)
             return True
         except:
             return False

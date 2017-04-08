@@ -14,5 +14,3 @@ def check_ping(ip):
         return True
     else:
         return False
-
-check_ping(ip)
