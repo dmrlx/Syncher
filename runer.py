@@ -35,18 +35,20 @@ import bridge
 #     print("Pinged!")
 
 def main():
+    print(sys.version)
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
 
     if validator.ValidateParams.check_is_need_os:
         if pinger.check_ping(ParserResults.host): # Если пингуется машина
             if not validator.ValidateParams.check_exists_need_soft(): # Проверяем установлен ли rsync
-                print(validator.ValidateParams.check_exists_need_soft())
+                # print(validator.ValidateParams.check_exists_need_soft())
                 installer.Installer.install_local_need_soft() # Устанавливаем если нет
-                print(installer.Installer.install_local_need_soft())
-            
+                # print(installer.Installer.install_local_need_soft())
+
             print(validator.ValidateParams.check_pub_keys())
             if not validator.ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
-                bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
+                installer.Installer.generate_keys() # Генерируем ключи
+            bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
 
         else:
             print("Host is unavailable!")
