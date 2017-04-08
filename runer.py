@@ -37,6 +37,17 @@ import composer
 def main():
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
 
+    print("cli: {}".format(ParserResults.cli))
+    print("password: {}".format(ParserResults.password))
+    print("remote dirs: {}".format(ParserResults.dirs))
+    print("files: {}".format(ParserResults.files))
+    print("user: {}".format(ParserResults.user))
+    print("port: {}".format(ParserResults.port))
+    print("host: {}".format(ParserResults.host))
+    print("dist: {}".format(ParserResults.dist))
+
+
+
     if not validator.ValidateParams.SourceFiles.validate():
         print("Required parameter is not specified: source files")
         exit()
