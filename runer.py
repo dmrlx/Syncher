@@ -35,8 +35,18 @@ import composer
 #     print("Pinged!")
 
 def main():
-    print(sys.version)
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
+
+    if not validator.ValidateParams.SourceFiles.validate():
+        print("Required parameter is not specified: source files")
+        exit()
+    if not validator.ValidateParams.Username.validate():
+        print("Required parameter is not specified: username")
+        exit()
+    if not validator.ValidateParams.RemoteHost.validate():
+        print("Required parameter is not specified: remote host")
+        exit()
+
 
     if validator.ValidateParams.check_is_need_os:
         if pinger.check_ping(ParserResults.host): # Если пингуется машина
