@@ -1,13 +1,13 @@
 # vars for tests
-"""class ParserResults(object):
-    cli = "-r"
-    password = "000"
-    loc = "/usr"
-    files = "jkhdkjh"
-    user = "root"
-    port = "22"
-    host = "host"
-    dist = "hgh"""
+# class ParserResults(object):
+#     cli = "-r"
+#     password = "000"
+#     dirs = "/usr"
+#     files = "jkhdkjh"
+#     user = "root"
+#     port = "22"
+#     host = "host"
+#     dist = "hgh"
 
 from variables import ParserResults
 
@@ -18,7 +18,7 @@ class Composer(object):
         if ParserResults.port:
             ssh_param = "-e \"ssh -p {}\" ".format(ParserResults.port)
         else:
-            ssh_param = "ssh "
+            ssh_param = ""
 
         if ParserResults.cli:
             cli_param = ParserResults.cli + " "
@@ -36,12 +36,12 @@ class Composer(object):
             files_param = ""
 
         if ParserResults.dist:
-            dist_param = ":" + ParserResults.dist
+            dist_param =  ParserResults.dist
         else:
             dist_param = ""
 
         return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
-               "@" + ParserResults.host + dist_param
+               "@" + ParserResults.host + " /" + dist_param
 
 
-# print(Composer.composer())
+print(Composer.composer())
