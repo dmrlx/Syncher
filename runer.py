@@ -11,7 +11,7 @@ import pinger
 import validator
 import installer
 import bridge
-# import composer
+import composer
 
 # Генератор ping'a
 # Пингует по умолчанию 1 раз. Можно увеличить таймер, но всё равно тригернётся на первый же ответ.
@@ -48,8 +48,10 @@ def main():
             print(validator.ValidateParams.check_pub_keys())
             if not validator.ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
                 installer.Installer.generate_keys() # Генерируем ключи
-            bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
-
+            #bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
+            print(ParserResults.dirs)
+            print(ParserResults.files)
+            print(composer.Composer.composer())
             
 
         else:

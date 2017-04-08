@@ -9,6 +9,7 @@
     host = "host"
     dist = "hgh"""
 
+from variables import ParserResults
 
 class Composer(object):
     @staticmethod
@@ -24,8 +25,8 @@ class Composer(object):
         else:
             cli_param = ""
 
-        if ParserResults.loc:
-            loc_param = ParserResults.loc + " "
+        if ParserResults.dirs:
+            loc_param = ParserResults.dirs + " "
         else:
             loc_param = ""
 
@@ -43,4 +44,4 @@ class Composer(object):
                "@" + ParserResults.host + dist_param
 
 
-print(Composer.composer())
+# print(Composer.composer())
