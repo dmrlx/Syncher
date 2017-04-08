@@ -36,7 +36,7 @@ def key_search(auth_keys='authorized_keys', ssh='will be replaced in wrapper'):
     found = stdout.read().decode()
 # Если такого файла не было найдено, создаем его в папке по умолчанию
     if not found:
-        ssh.exec_command('mkdir -p ~/.ssh/ && touch ~/.ssh/{}'.format(auth_keys))
+        ssh.exec_command('(mkdir -p ~/.ssh/ && touch ~/.ssh/{}) || touch ~/.ssh/{}'.format(auth_keys, auth_keys))
         stdin, stdout, stderr = ssh.exec_command('find / -name {}'.format(auth_keys))
         found = stdout.read().decode()
     return found
