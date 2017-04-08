@@ -48,7 +48,8 @@ r""" Parser - модуль, распознающий определенные п
 """
 
 from re import match as re_match
-from os.path import isdir as path_isdir, isfile as path_isfile
+from os import getcwd
+from os.path import isdir as path_isdir, isfile as path_isfile, expanduser as path_of
 
 
 def execute(args, results):
@@ -96,8 +97,11 @@ def dirs_parse(some_list):
 def files_parse(some_list):
     files = []
     for element in pull_local_info(some_list).split():
-        if path_isfile(element):
-            files.append(element)
+        if path_isfile("{}/{}".format(getcwd(), element)):
+            files.append("{}/{}".format(getcwd(), element))
+        if path_isfile("{}/{}".format(path_of('~'), element)):
+            files.append("{}/{}".format(path_of('~'), element))
+        
     return " ".join(files)
 
 def pull_remote_info(some_list):
