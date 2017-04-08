@@ -50,6 +50,8 @@ def main():
                 installer.Installer.generate_keys() # Генерируем ключи
             bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
 
+            
+
         else:
             print("Host is unavailable!")
     else:
