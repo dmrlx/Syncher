@@ -15,7 +15,7 @@ class Installer(object):
         def wrapper(*args):
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(host=ParserResults.host, password=ParserResults.password, username=ParserResults.user)
+            ssh.connect(hostname=ParserResults.host, password=ParserResults.password, username=ParserResults.user)
             done = function(*args, ssh=ssh)
             ssh.close()
             return done
