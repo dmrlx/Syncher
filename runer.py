@@ -45,14 +45,14 @@ def cmd_runer(cmd):
 def main():
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
 
-    # print("cli: {}".format(ParserResults.cli))
-    # print("password: {}".format(ParserResults.password))
-    # print("remote dirs: {}".format(ParserResults.dirs))
-    # print("files: {}".format(ParserResults.files))
-    # print("user: {}".format(ParserResults.user))
-    # print("port: {}".format(ParserResults.port))
-    # print("host: {}".format(ParserResults.host))
-    # print("dist: {}".format(ParserResults.dist))
+    print("cli: {}".format(ParserResults.cli))
+    print("password: {}".format(ParserResults.password))
+    print("remote dirs: {}".format(ParserResults.dirs))
+    print("files: {}".format(ParserResults.files))
+    print("user: {}".format(ParserResults.user))
+    print("port: {}".format(ParserResults.port))
+    print("host: {}".format(ParserResults.host))
+    print("dist: {}".format(ParserResults.dist))
 
     if not validator.ValidateParams.SourceFiles.validate():
         print("Required parameter is not specified: source files")
@@ -75,9 +75,9 @@ def main():
             print(validator.ValidateParams.check_pub_keys())
             if not validator.ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
                 installer.Installer.generate_keys() # Генерируем ключи
-            #bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
-            print(ParserResults.dirs)
-            print(ParserResults.files)
+            bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
+
+            print(composer.Composer.composer())
             cmd_runer(composer.Composer.composer())
 
         else:

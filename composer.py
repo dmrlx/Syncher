@@ -41,7 +41,7 @@ class Composer(object):
             dist_param = ""
 
         return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
-               "@" + ParserResults.host + " /" + dist_param
+               "@" + ParserResults.host + ":/" + dist_param
 
 
-print(Composer.composer())
+# print(Composer.composer())
