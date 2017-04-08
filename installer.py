@@ -11,11 +11,11 @@ from variables import ParserResults
 class Installer(object):
 
     # @staticmethod   # Install ssh connection with remote machine
-    def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
+    def to_connect(function):
         def wrapper(*args):
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(host, password=password, username=username)
+            ssh.connect(host=ParserResults.host, password=ParserResults.password, username=ParserResults.user)
             done = function(*args, ssh=ssh)
             ssh.close()
             return done
