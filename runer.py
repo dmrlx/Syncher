@@ -34,19 +34,25 @@ import composer
 # else:
 #     print("Pinged!")
 
+def cmd_runer(cmd):
+    try:
+        subprocess.call(cmd, shell=True)
+        return True
+    except:
+        return False
+
+
 def main():
     parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
 
-    print("cli: {}".format(ParserResults.cli))
-    print("password: {}".format(ParserResults.password))
-    print("remote dirs: {}".format(ParserResults.dirs))
-    print("files: {}".format(ParserResults.files))
-    print("user: {}".format(ParserResults.user))
-    print("port: {}".format(ParserResults.port))
-    print("host: {}".format(ParserResults.host))
-    print("dist: {}".format(ParserResults.dist))
-
-
+    # print("cli: {}".format(ParserResults.cli))
+    # print("password: {}".format(ParserResults.password))
+    # print("remote dirs: {}".format(ParserResults.dirs))
+    # print("files: {}".format(ParserResults.files))
+    # print("user: {}".format(ParserResults.user))
+    # print("port: {}".format(ParserResults.port))
+    # print("host: {}".format(ParserResults.host))
+    # print("dist: {}".format(ParserResults.dist))
 
     if not validator.ValidateParams.SourceFiles.validate():
         print("Required parameter is not specified: source files")
@@ -72,10 +78,10 @@ def main():
             #bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
             print(ParserResults.dirs)
             print(ParserResults.files)
-            print(composer.Composer.composer())
-            
+            cmd_runer(composer.Composer.composer())
 
         else:
             print("Host is unavailable!")
     else:
         print("Wrong OS!")
+
