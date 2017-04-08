@@ -6,19 +6,19 @@ necessary software on local/remote machine, make remote directory and generate S
 import paramiko
 from subprocess import call
 from os.path import expanduser
-
 from variables import ParserResults
 
 class Installer(object):
 
     # @staticmethod   # Install ssh connection with remote machine
     def to_connect(function, host=ParserResults.host, password=ParserResults.password, username=ParserResults.user):
-        def wrapper():
+        def wrapper(*args):
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(host, password=password, username=username)
-            function(ssh=ssh)
+            done = function(*args, ssh=ssh)
             ssh.close()
+            return done
         return wrapper
 
     @staticmethod
@@ -45,14 +45,15 @@ class Installer(object):
         except:
             return False
 
+    pub_keys_path = expanduser('~') + '/.ssh/id_rsa'
+
     @staticmethod
     def generate_keys():  # Generate SSH keys
         try:
-            pub_keys_path = "expanduser('~')+'/.ssh/id_rsa'"
             call('ssh-keygen -t rsa -N "" -f {} > /dev/null'.format(pub_keys_path), shell=True)
             return True
         except:
             return False
 
 if __name__ == "__main__":
-    from variables import ParserResults
+    pass

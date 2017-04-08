@@ -14,42 +14,39 @@ r""" Bridge - модуль для "проброса ключей":
 """
 
 from subprocess import check_output
-from paramiko import SSHClient, AutoAddPolicy
 from installer import Installer
 
 
-def key_transfer(username, hostname, password, key_path='~/.ssh/id_rsa'):
+def key_transfer(key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
 # (сгенерирован в инсталлере)
     local_key = check_output('cat {}.pub'.format(key_path), shell=True).decode().strip()
-# Три команды - подключаемся к удаленной машине
-    remote_machine = SSHClient()
-    remote_machine.set_missing_host_key_policy(AutoAddPolicy())
-    remote_machine.connect(username=username, hostname=hostname, password=password)
 # Вызываем функцию поиска пути файла с паблик ключами на удаленной машине -
 # возвращает путь
-    rem_key_path = key_search(remote_machine)
+    rem_key_path = key_search()
 # Вызываем функцию добавления в файл (с паблик ключами на удаленной машине)
 # нашего сгенерированного ключа
-    key_append(remote_machine, local_key, rem_key_path)
+    key_append(local_key, rem_key_path)
 
-def key_search(machine, auth_keys='authorized_keys'):
+@Installer.to_connect
+def key_search(auth_keys='authorized_keys', ssh='will be replaced in wrapper'):
 # Смотрим на удаленной машине, есть ли файл с паблик ключами подкючавшихся к ней машин
-    stdin, stdout, stderr = machine.exec_command('find / -name {}'.format(auth_keys))
+    stdin, stdout, stderr = ssh.exec_command('find / -name {}'.format(auth_keys))
 # Если найден, то записываем путь к нему в переменную
     found = stdout.read().decode()
 # Если такого файла не было найдено, создаем его в папке по умолчанию
     if not found:
-        machine.exec_command('mkdir -p ~/.ssh/ && touch ~/.ssh/{}'.format(auth_keys))
-        stdin, stdout, stderr = machine.exec_command('find / -name {}'.format(auth_keys))
+        ssh.exec_command('mkdir -p ~/.ssh/ && touch ~/.ssh/{}'.format(auth_keys))
+        stdin, stdout, stderr = ssh.exec_command('find / -name {}'.format(auth_keys))
         found = stdout.read().decode()
     return found
 
-def key_append(machine, key, rem_path):
+@Installer.to_connect
+def key_append(key, rem_path, ssh='will be replaced in wrapper'):
 # Добавляем паблик ключ нашей локальной машины к списку паблик ключей на удаленном хосте
-    machine.exec_command("echo {} >> {}".format(key, rem_path))
+    ssh.exec_command("echo {} >> {}".format(key, rem_path))
 
 
 if __name__ == '__main__':
 # Пример вызова функции
-    key_transfer('virtual', '192.168.56.5', 'Me')
+    key_transfer(Installer.pub_keys_path)
