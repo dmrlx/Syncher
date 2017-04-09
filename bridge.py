@@ -13,14 +13,16 @@ r""" Bridge - модуль для "проброса ключей":
        файлу
 """
 
-from subprocess import check_output
+from subprocess import call, check_output
 from installer import Installer
 
 
-def key_transfer(key_path):
+def key_transfer(host, key_path):
 # Записываем в переменную содержимое паблик ключа на нашей машине
 # (сгенерирован в инсталлере)
-    local_key = check_output('cat {}.pub'.format(key_path), shell=True).decode().strip()
+    local_key = check_output('cat {}id_rsa.pub'.format(key_path), shell=True).decode().strip()
+# Добавляем удаленную машину в список известных хостов
+    call("ssh-keyscan {} 1>> {}known_hosts 2> /dev/null".format(host, key_path), shell=True)
 # Вызываем функцию поиска пути файла с паблик ключами на удаленной машине -
 # возвращает путь
     rem_key_path = key_search()
@@ -49,4 +51,4 @@ def key_append(key, rem_path, ssh='will be replaced in wrapper'):
 
 if __name__ == '__main__':
 # Пример вызова функции
-    key_transfer(Installer.pub_keys_path)
+    key_transfer(Installer.keys_path)

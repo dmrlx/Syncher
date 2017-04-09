@@ -59,7 +59,7 @@ class ValidateParams(object):
 
     @staticmethod
     def check_pub_keys():  # Check that public ssh keys exist
-        if os.path.exists(expanduser('~') + '/.ssh/id_rsa.pub') == True:
+        if os.path.exists("{}id_rsa.pub".format(Installer.keys_path)) == True:
             return True
         else:
             return False

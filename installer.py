@@ -45,12 +45,12 @@ class Installer(object):
         except:
             return False
 
-    pub_keys_path = expanduser('~') + '/.ssh/id_rsa'
+    keys_path = expanduser('~') + '/.ssh/'
 
     @staticmethod
     def generate_keys():  # Generate SSH keys
         try:
-            call('ssh-keygen -t rsa -N "" -f {} > /dev/null'.format(Installer.pub_keys_path), shell=True)
+            call("ssh-keygen -t rsa -N '' -f {}id_rsa > /dev/null".format(Installer.keys_path), shell=True)
             return True
         except:
             return False

@@ -143,7 +143,7 @@ def rem_host_parse(some_list):
         return host_plus_dir[0]
     else:
         host_plus_dir = remote_info.split(':')
-        return host_plus_dir[0]
+    return host_plus_dir[0]
 
 def rem_dirs_parse(some_list):
     remote_info = pull_remote_info(some_list)
@@ -155,7 +155,7 @@ def rem_dirs_parse(some_list):
         host_plus_dir = remote_info.split(':')
         if len(host_plus_dir) > 1:
             return host_plus_dir[1]
-        return ''
+    return '~'
 
 
 if __name__ == "__main__":

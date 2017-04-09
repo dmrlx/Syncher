@@ -5,13 +5,13 @@ import sys
 import platform
 import subprocess
 import parser
-import receiver
+from receiver import ArgsReceiver
 from variables import ParserResults
 import pinger
-import validator
-import installer
+from validator import ValidateParams, RemoteCheck
+from installer import Installer
 import bridge
-import composer
+from composer import Composer
 
 # Генератор ping'a
 # Пингует по умолчанию 1 раз. Можно увеличить таймер, но всё равно тригернётся на первый же ответ.
@@ -43,7 +43,7 @@ def cmd_runer(cmd):
 
 
 def main():
-    parser.execute(receiver.ArgsReceiver.receiver(), ParserResults)
+    parser.execute(ArgsReceiver.receiver(), ParserResults)
 
     print("cli: {}".format(ParserResults.cli))
     print("password: {}".format(ParserResults.password))
@@ -54,31 +54,31 @@ def main():
     print("host: {}".format(ParserResults.host))
     print("dist: {}".format(ParserResults.dist))
 
-    if not validator.ValidateParams.SourceFiles.validate():
+    if not ValidateParams.SourceFiles.validate():
         print("Required parameter is not specified: source files")
         exit()
-    if not validator.ValidateParams.Username.validate():
+    if not ValidateParams.Username.validate():
         print("Required parameter is not specified: username")
         exit()
-    if not validator.ValidateParams.RemoteHost.validate():
+    if not ValidateParams.RemoteHost.validate():
         print("Required parameter is not specified: remote host")
         exit()
 
 
-    if validator.ValidateParams.check_is_need_os:
+    if ValidateParams.check_is_need_os:
         if pinger.check_ping(ParserResults.host): # Если пингуется машина
-            if not validator.ValidateParams.check_exists_need_soft(): # Проверяем установлен ли rsync
-                # print(validator.ValidateParams.check_exists_need_soft())
-                installer.Installer.install_local_need_soft() # Устанавливаем если нет
-                # print(installer.Installer.install_local_need_soft())
+            if not ValidateParams.check_exists_need_soft(): # Проверяем установлен ли rsync
+                # print(ValidateParams.check_exists_need_soft())
+                Installer.install_local_need_soft() # Устанавливаем если нет
+                # print(Installer.install_local_need_soft())
 
-            print(validator.ValidateParams.check_pub_keys())
-            if not validator.ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
-                installer.Installer.generate_keys() # Генерируем ключи
-            bridge.key_transfer(installer.Installer.pub_keys_path) # Пробрасываем
+            print(ValidateParams.check_pub_keys())
+            if not ValidateParams.check_pub_keys(): # Проверяем проброшены ли ключи
+                Installer.generate_keys() # Генерируем ключи
+            bridge.key_transfer(ParserResults.host, Installer.keys_path) # Пробрасываем
 
-            print(composer.Composer.composer())
-            cmd_runer(composer.Composer.composer())
+            print(Composer.composer())
+            cmd_runer(Composer.composer())
 
         else:
             print("Host is unavailable!")
