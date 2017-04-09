@@ -53,6 +53,7 @@ from os.path import isdir as path_isdir, isfile as path_isfile, expanduser as pa
 
 
 def execute(args, results):
+    print(args)
     results.cli = options_parse(args)
     results.password = password_parse(args)
     results.dirs = dirs_parse(args)
@@ -96,12 +97,12 @@ def dirs_parse(some_list):
 
 def files_parse(some_list):
     files = []
+    pattern = r".+\*$"
     for element in pull_local_info(some_list).split():
-        if path_isfile("{}/{}".format(getcwd(), element)):
-            files.append("{}/{}".format(getcwd(), element))
         if path_isfile("{}/{}".format(path_of('~'), element)):
             files.append("{}/{}".format(path_of('~'), element))
-        
+        elif re_match(pattern, element):
+            files.append("{}/{}".format(path_of('~'), element))
     return " ".join(files)
 
 def pull_remote_info(some_list):
