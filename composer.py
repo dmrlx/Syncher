@@ -14,7 +14,7 @@ from variables import ParserResults
 class Composer(object):
     @staticmethod
     def composer(parser_results=ParserResults):
-        cmd = "rsync "
+        cmd = "rsync -r "
         if parser_results.port:
             ssh_param = "-e \"ssh -p {}\" ".format(parser_results.port)
         else:
