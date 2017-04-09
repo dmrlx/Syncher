@@ -13,35 +13,35 @@ from variables import ParserResults
 
 class Composer(object):
     @staticmethod
-    def composer():
+    def composer(parser_results=ParserResults):
         cmd = "rsync "
-        if ParserResults.port:
-            ssh_param = "-e \"ssh -p {}\" ".format(ParserResults.port)
+        if parser_results.port:
+            ssh_param = "-e \"ssh -p {}\" ".format(parser_results.port)
         else:
             ssh_param = ""
 
-        if ParserResults.cli:
-            cli_param = ParserResults.cli + " "
+        if parser_results.cli:
+            cli_param = parser_results.cli + " "
         else:
             cli_param = ""
 
-        if ParserResults.dirs:
-            loc_param = ParserResults.dirs + " "
+        if parser_results.dirs:
+            loc_param = parser_results.dirs + " "
         else:
             loc_param = ""
 
-        if ParserResults.files:
-            files_param = ParserResults.files + " "
+        if parser_results.files:
+            files_param = parser_results.files + " "
         else:
             files_param = ""
 
-        if ParserResults.dist:
-            dist_param =  ParserResults.dist
+        if parser_results.dist:
+            dist_param =  parser_results.dist
         else:
             dist_param = ""
 
-        return cmd + cli_param + ssh_param + loc_param + files_param + ParserResults.user + \
-               "@" + ParserResults.host + ":" + dist_param
+        return cmd + cli_param + ssh_param + loc_param + files_param + parser_results.user + \
+               "@" + parser_results.host + ":" + dist_param
 
 
 # print(Composer.composer())
