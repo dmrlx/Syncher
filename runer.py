@@ -47,7 +47,7 @@ def main():
 
     print("cli: {}".format(ParserResults.cli))
     print("password: {}".format(ParserResults.password))
-    print("remote dirs: {}".format(ParserResults.dirs))
+    print("dirs: {}".format(ParserResults.dirs))
     print("files: {}".format(ParserResults.files))
     print("user: {}".format(ParserResults.user))
     print("port: {}".format(ParserResults.port))

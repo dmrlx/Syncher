@@ -99,7 +99,9 @@ def files_parse(some_list):
     files = []
     pattern = r".+\*$"
     for element in pull_local_info(some_list).split():
-        if path_isfile("{}/{}".format(path_of('~'), element)):
+        if path_isfile(element):
+            files.append(element)
+        elif path_isfile("{}/{}".format(path_of('~'), element)):
             files.append("{}/{}".format(path_of('~'), element))
         elif re_match(pattern, element):
             files.append("{}/{}".format(path_of('~'), element))
