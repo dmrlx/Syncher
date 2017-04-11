@@ -1,4 +1,5 @@
+import interruptor
 import runer
 
 if __name__ == "__main__":
-runer.runer()
+    interruptor.handle(runer.main)
